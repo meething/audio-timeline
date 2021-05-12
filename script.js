@@ -95,7 +95,7 @@ function startRecording() {
 
       //update the format
       document.getElementById("formats").innerHTML =
-        "Format: 1 channel pcm @ " + audioContext.sampleRate / 1000 + "kHz";
+        "Recording: 1 channel pcm @ " + audioContext.sampleRate / 1000 + "kHz";
 
       /*  assign to gumStream for later use  */
       gumStream = stream;
@@ -140,6 +140,8 @@ function stopRecording() {
 
   //stop microphone access
   gumStream.getAudioTracks()[0].stop();
+  
+  document.getElementById("formats").innerHTML = "";
 
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(createDownloadLink);

@@ -131,34 +131,26 @@ function stopRecording() {
 
 function createDownloadLink(blob,remote) {
   console.log('got data!',blob)
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+      const srcUrl = e.target.result;
+      au.src = srcUrl;
+      console.log("!!!!!!!!!!!!!!", e.target)
+    
+    
+    
+  };
+  reader.readAsDataURL(blob);
+  
+  
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
-  var li = document.createElement("li");
-  var link = document.createElement("a");
-
-  var filename = new Date().toISOString();
-
   //add controls to the <audio> element
   au.controls = false;
   if (remote) au.autoplay = true;
-  au.src = url;
-
+  //au.src = url;
   var player = au;
-
-  //save to disk link
-  link.href = url;
-  link.download = filename + ".wav"; //download forces the browser to donwload the file using the  filename
-  link.innerHTML = "Save to disk";
-
-  //add the new audio element to li
-  li.appendChild(au);
-
-  //add the filename to the li
-  li.appendChild(document.createTextNode(filename + ".wav "));
-
-  //add the save to disk link to li
-  li.appendChild(link);
-  
   // render locally
   var tsid = Date.now();
   player.id = 'wave'+tsid;

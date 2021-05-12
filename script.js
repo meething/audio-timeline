@@ -135,8 +135,39 @@ function createDownloadLink(blob,remote) {
   const reader = new FileReader();
   reader.onload = function(e) {
       const srcUrl = e.target.result;
-      au.src = srcUrl;
       console.log("!!!!!!!!!!!!!!", e.target)
+    
+      var url = URL.createObjectURL(blob);
+      var au = document.createElement("audio");
+      //add controls to the <audio> element
+      au.controls = false;
+      if (remote) au.autoplay = true;
+      au.src = srcUrl;
+      //au.src = url;
+      var player = au;
+      // render locally
+      var tsid = Date.now();
+      player.id = 'wave'+tsid;
+      var pdiv = document.createElement("div");
+      pdiv.innerHTML = "👋 &#10148;"
+      pdiv.appendChild(player);
+      var items = [
+        {
+          id: tsid,
+          content: pdiv,
+          group: 1,
+          title: "audio",
+          start: time.start || Date.now(),
+          end: time.stop || Date.now()+600
+        }
+      ];
+      timeline.moveTo(time.start || Date.now(), {
+        animation: false
+      });
+      data.add(items);
+      timeline.setGroups(groups);
+      timeline.fit();
+      time = {};
     
     
     
@@ -144,36 +175,7 @@ function createDownloadLink(blob,remote) {
   reader.readAsDataURL(blob);
   
   
-  var url = URL.createObjectURL(blob);
-  var au = document.createElement("audio");
-  //add controls to the <audio> element
-  au.controls = false;
-  if (remote) au.autoplay = true;
-  //au.src = url;
-  var player = au;
-  // render locally
-  var tsid = Date.now();
-  player.id = 'wave'+tsid;
-  var pdiv = document.createElement("div");
-  pdiv.innerHTML = "👋 &#10148;"
-  pdiv.appendChild(player);
-  var items = [
-    {
-      id: tsid,
-      content: pdiv,
-      group: 1,
-      title: "audio",
-      start: time.start || Date.now(),
-      end: time.stop || Date.now()+600
-    }
-  ];
-  timeline.moveTo(time.start || Date.now(), {
-    animation: false
-  });
-  data.add(items);
-  timeline.setGroups(groups);
-  timeline.fit();
-  time = {};
+
 }
 
 

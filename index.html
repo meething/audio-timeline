@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Audio Timeline</title>
-    <script type="module">
-      import { joinRoom } from "https://cdn.skypack.dev/trystero";
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.2.0/vis.min.js"></script>
-    <script src="https://unpkg.com/wavesurfer.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.2.0/vis.min.css"
@@ -26,7 +22,7 @@
     <link rel="stylesheet" href="/style.css" />
 
     <!-- import the webpage's javascript file -->
-    <script src="/script.js" defer></script>
+    <script type="module" src="/script.js" defer></script>
   </head>
   <body>
     <div id="controls">

@@ -1,3 +1,9 @@
+import { joinRoom } from "https://cdn.skypack.dev/trystero";
+
+const config = {appId: 'audiotimeline'}
+const room = joinRoom(config, 'lobby')
+
+
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 
@@ -82,10 +88,7 @@ function startRecording() {
   navigator.mediaDevices
     .getUserMedia(constraints)
     .then(function(stream) {
-      console.log(
-        "getUserMedia() success, stream created, initializing Recorder.js ..."
-      );
-
+ 
       /*
     	create an audio context after getUserMedia is called
     	sampleRate might change after getUserMedia is called, like it does on macOS when recording through AirPods
@@ -144,10 +147,12 @@ function stopRecording() {
   document.getElementById("formats").innerHTML = "";
 
   //create the wav blob and pass it on to createDownloadLink
+  rec.exportWAV(sendAudio);
   rec.exportWAV(createDownloadLink);
 }
 
 function createDownloadLink(blob) {
+  console.log('got data!')
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   var li = document.createElement("li");
@@ -177,11 +182,6 @@ function createDownloadLink(blob) {
   //add the save to disk link to li
   li.appendChild(link);
 
-  //add the li element to the ol
-  //recordingsList.appendChild(li);
-
-  console.log("html", player);
-
   var tsid = Date.now();
   player.id = 'wave'+tsid;
   var pdiv = document.createElement("div");
@@ -205,3 +205,15 @@ function createDownloadLink(blob) {
   timeline.fit();
   time = {};
 }
+
+
+// ROOM EVENTS
+
+const [sendAudio, getAudio] = room.makeAction('audio')
+
+// blobs are automatically handled, as are any form of TypedArray
+// canvas.toBlob(blob => sendAudio(blob))
+
+// binary data is received as raw ArrayBuffers so your handling code should
+// interpret it in a way that makes sense
+getAudio((data, id) => (createDownloadLink(new Blob([data]))));

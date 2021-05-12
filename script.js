@@ -1,13 +1,16 @@
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 
+// create a Group list
+var groups = new vis.DataSet();
+groups.add({ id: 1, content: "SYSTEM" });
 // create a DataSet
 var data = new vis.DataSet();
-
 // add items
 data.add([
   {
     id: 5,
+    group: 1,
     content: "Start!",
     start: Date.now()
   }
@@ -18,6 +21,10 @@ var options = {};
 
 // Create a Timeline
 var timeline = new vis.Timeline(container, data, options);
+timeline.setGroups(groups);
+timeline.moveTo(Date.now(), {
+  animation: false
+});
 
 //$('button').click(function() {
 window.addItem = function() {
@@ -219,8 +226,8 @@ function createDownloadLink(blob) {
     {
       id: Date.now(),
       content: player,
-      group: 'player',
-      title: 'audio',
+      group: 1,
+      title: "audio",
       start: time.start,
       end: time.stop
     }
@@ -229,6 +236,7 @@ function createDownloadLink(blob) {
     animation: false
   });
   data.add(items);
-  timeline.fit()
+  timeline.setGroups(groups);
+  timeline.fit();
   time = {};
 }

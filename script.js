@@ -7,13 +7,8 @@ var data = new vis.DataSet();
 // add items
 data.add([{
     id: 5,
-    content: 'item 5',
-    start: '2021-04-15'
-  },
-  {
-    id: 6,
-    content: 'item7<br><a href="#" onclick="addItem()">click here</a>',
-    start: '2021-04-17'
+    content: 'Start!',
+    start: Date.now()
   }
 ]);
 
@@ -188,7 +183,8 @@ function createDownloadLink(blob) {
 	var filename = new Date().toISOString();
 
 	//add controls to the <audio> element
-	au.controls = true;
+	au.controls = true
+  au.autoplay = true;
 	au.src = url;
   
   var player = au;
@@ -207,38 +203,21 @@ function createDownloadLink(blob) {
 	//add the save to disk link to li
 	li.appendChild(link);
 	
-	//upload link
-	var upload = document.createElement('a');
-	upload.href="#";
-	upload.innerHTML = "Upload";
-	upload.addEventListener("click", function(event){
-		  var xhr=new XMLHttpRequest();
-		  xhr.onload=function(e) {
-		      if(this.readyState === 4) {
-		          console.log("Server returned: ",e.target.responseText);
-		      }
-		  };
-		  var fd=new FormData();
-		  fd.append("audio_data",blob, filename);
-		  xhr.open("POST","upload.php",true);
-		  xhr.send(fd);
-	})
-	li.appendChild(document.createTextNode (" "))//add a space in between
-	li.appendChild(upload)//add the upload link to li
-
 	//add the li element to the ol
-	recordingsList.appendChild(li);
+	//recordingsList.appendChild(li);
   
   console.log('html', player);
   
    var items = [{
     id: Date.now(),
     content: player,
-    start: time.start
+    start: time.start,
+    end: time.stop
    }];
   timeline.moveTo(time.start, {
     animation: false
   });
+  //timeline.fit()
   console.log(items)
   data.add(items);
   time = {};

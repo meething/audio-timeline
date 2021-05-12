@@ -10,36 +10,37 @@ var container = document.getElementById("visualization");
 // create a Group list
 var groupIds = [];
 groupIds.push(selfId)
-var groups = new vis.DataSet();
+var groups = false;
 
-function addGroup(id){
-  groupIds.forEach(id){
-    groups.add({ id: id, content: groupsId[id] });
-  }
-  
+function refreshGroups(){
+  var upgroups = new vis.DataSet();
+  groupIds.forEach(function(id){
+    upgroups.add({ id: id+1, content: groupIds[id] });
+  });
+  groups = upgroups;
+  timeline.setGroups(upgroups);
 }
-
 
 // create a DataSet
 var data = new vis.DataSet();
 // add items
-/*
+
 data.add([
   {
-    id: 5,
+    id: 1,
     group: 1,
     content: "Start!",
     start: Date.now()
   }
 ]);
-*/
+
 
 // Configuration for the Timeline
 var options = {};
 
 // Create a Timeline
 var timeline = new vis.Timeline(container, data, options);
-timeline.setGroups(groups);
+refreshGroups();
 timeline.moveTo(Date.now(), {
   animation: false
 });
@@ -132,7 +133,13 @@ function stopRecording() {
 }
 
 function createDownloadLink(blob,remote) {
-  console.log('got data!',blob)
+  console.log('got data!',blob,remote)
+  
+  if (remote && !groupIds[remote]){
+    groupIds.push(remote);
+    refreshGroups();
+  }
+  
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   au.controls = false;
@@ -150,7 +157,7 @@ function createDownloadLink(blob,remote) {
     {
       id: tsid,
       content: pdiv,
-      group: 1,
+      group: 0,
       title: "audio",
       start: time.start || Date.now(),
       end: time.stop || Date.now()+600
@@ -161,7 +168,7 @@ function createDownloadLink(blob,remote) {
   });
   data.add(items);
   timeline.setGroups(groups);
-  timeline.fit();
+  //timeline.fit();
   time = {};
 }
 

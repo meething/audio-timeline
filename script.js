@@ -194,7 +194,8 @@ const [sendAudio, getAudio] = room.makeAction('audio')
 
 // binary data is received as raw ArrayBuffers so your handling code should
 // interpret it in a way that makes sense
-getAudio((data, id, meta) => (processAudio(data,id,meta) ));
+getAudio((data, id, meta) => (processAudio(data,id,meta)));
+
 function processAudio(data,id,meta){
   var blob = new Blob([data], {type: "audio/wav"})
   console.log(blob,id,meta)

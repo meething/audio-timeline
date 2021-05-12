@@ -132,31 +132,12 @@ function createDownloadLink(blob,remote) {
   console.log('got data!',blob)
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
-  var li = document.createElement("li");
-  var link = document.createElement("a");
-
-  var filename = new Date().toISOString();
-
   //add controls to the <audio> element
   au.controls = false;
   if (remote) au.autoplay = true;
   au.src = url;
-
   var player = au;
 
-  //save to disk link
-  link.href = url;
-  link.download = filename + ".wav"; //download forces the browser to donwload the file using the  filename
-  link.innerHTML = "Save to disk";
-
-  //add the new audio element to li
-  li.appendChild(au);
-
-  //add the filename to the li
-  li.appendChild(document.createTextNode(filename + ".wav "));
-
-  //add the save to disk link to li
-  li.appendChild(link);
   
   // render locally
   var tsid = Date.now();
@@ -169,9 +150,8 @@ function createDownloadLink(blob,remote) {
       id: tsid,
       content: pdiv,
       group: 1,
-      title: "audio",
       start: time.start || Date.now(),
-      end: time.stop || Date.now()+600
+      end: time.stop || undefined
     }
   ];
   timeline.moveTo(time.start || Date.now(), {
@@ -188,14 +168,9 @@ function createDownloadLink(blob,remote) {
 
 const [sendAudio, getAudio] = room.makeAction('audio')
 
-// blobs are automatically handled, as are any form of TypedArray
-// canvas.toBlob(blob => sendAudio(blob))
-
-// binary data is received as raw ArrayBuffers so your handling code should
-// interpret it in a way that makes sense
 getAudio((data, id, meta) => (processAudio(data,id,meta)));
 
-function processAudio(data,id,meta){
+async function processAudio(data,id,meta){
   var blob = new Blob([data], {type: "audio/wav"})
   //var blob = data;
   console.log(blob,id,meta)

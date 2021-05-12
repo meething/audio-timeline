@@ -134,7 +134,7 @@ function createDownloadLink(blob,remote) {
   
   const reader = new FileReader();
   reader.onload = function(e) {
-      const srcUrl = e.target.result;
+      const blob = e.target.result;
       console.log("!!!!!!!!!!!!!!", e.target)
     
       var url = URL.createObjectURL(blob);
@@ -142,8 +142,8 @@ function createDownloadLink(blob,remote) {
       //add controls to the <audio> element
       au.controls = false;
       if (remote) au.autoplay = true;
-      au.src = srcUrl;
-      //au.src = url;
+      //au.src = srcUrl;
+      au.src = url;
       var player = au;
       // render locally
       var tsid = Date.now();

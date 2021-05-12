@@ -126,7 +126,7 @@ function stopRecording() {
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(createDownloadLink);
   rec.exportWAV(sendAudio);
-  
+  rec.exportWAV(console.table)
 }
 
 function createDownloadLink(blob,remote) {
@@ -197,7 +197,8 @@ const [sendAudio, getAudio] = room.makeAction('audio')
 getAudio((data, id, meta) => (processAudio(data,id,meta)));
 
 function processAudio(data,id,meta){
+  console.table(data);
   var blob = new Blob([data], {type: "audio/wav"})
   console.log(blob,id,meta)
-  createDownloadLink(blob,true)
+  createDownloadLink(blob, true)
 }

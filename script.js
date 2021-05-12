@@ -3,7 +3,7 @@ var container = document.getElementById("visualization");
 
 // create a Group list
 var groups = new vis.DataSet();
-groups.add({ id: 1, content: "SYSTEM" });
+groups.add({ id: 1, content: "TALK" });
 // create a DataSet
 var data = new vis.DataSet();
 // add items

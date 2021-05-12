@@ -26,7 +26,7 @@ var timeline = new vis.Timeline(container, data, options);
 //$('button').click(function() {
 window.addItem = function() {
   // Create a DataSet (allows two way data-binding)
-  var id = 999;
+  var id = Date.now();
   var url = "http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3";
   var html = "<div id='wave" + id + "'>audio</div>"
   var items = [{
@@ -72,8 +72,11 @@ recordButton.addEventListener("click", startRecording);
 stopButton.addEventListener("click", stopRecording);
 pauseButton.addEventListener("click", pauseRecording);
 
+var time = {}
+
 function startRecording() {
   console.log("recordButton clicked");
+  time.start = new Date();
 
   /*
   	Simple constraints object, for more advanced audio features see
@@ -154,6 +157,7 @@ function pauseRecording() {
 
 function stopRecording() {
   console.log("stopButton clicked");
+  time.stop = new Date();
 
   //disable the stop button, enable the record too allow for new recordings
   stopButton.disabled = true;
@@ -222,4 +226,17 @@ function createDownloadLink(blob) {
 
 	//add the li element to the ol
 	recordingsList.appendChild(li);
+  
+   var items = [{
+    id: Date.now(),
+    content: au,
+    start: time.start,
+    end: time.stop
+  }];
+  timeline.moveTo(time.start, {
+    animation: false
+  });
+  data.add(items);
+  time = {};
+  
 }

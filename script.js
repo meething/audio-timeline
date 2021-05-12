@@ -219,6 +219,7 @@ function createDownloadLink(blob) {
     {
       id: Date.now(),
       content: player,
+      group: 'player',
       title: 'audio',
       start: time.start,
       end: time.stop
@@ -227,8 +228,7 @@ function createDownloadLink(blob) {
   timeline.moveTo(time.start, {
     animation: false
   });
-  //timeline.fit()
-  console.log(items);
   data.add(items);
+  timeline.fit()
   time = {};
 }

@@ -32,9 +32,13 @@ body {
 audio::-webkit-media-controls-panel
 audio::-webkit-media-controls-play-button
 */
+audio {
+  width: 90px;
+  max-width: 90px;
+}
 
 audio::-webkit-media-controls-panel {
-  width: 50px;
+  width: 90px;
 }
 
 

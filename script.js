@@ -69,31 +69,15 @@ function startRecording() {
   console.log("recordButton clicked");
   time.start = Date.now();
 
-  /*
-  	Simple constraints object, for more advanced audio features see
-  	https://addpipe.com/blog/audio-constraints-getusermedia/
-  */
-
   var constraints = {
     audio: true,
     video: false
   };
 
-
-  /*
-    	We're using the standard promise based getUserMedia() 
-    	https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-	*/
-
   navigator.mediaDevices
     .getUserMedia(constraints)
     .then(function(stream) {
  
-      /*
-    	create an audio context after getUserMedia is called
-    	sampleRate might change after getUserMedia is called, like it does on macOS when recording through AirPods
-    	the sampleRate defaults to the one set in your OS for your playback device
-    */
       audioContext = new AudioContext();
 
       //update the format
@@ -120,17 +104,15 @@ function startRecording() {
       console.log("Recording started");
     })
     .catch(function(err) {
-     
+       console.log(err)
     });
 }
 
 function pauseRecording() {
   console.log("pauseButton clicked rec.recording=", rec.recording);
   if (rec.recording) {
-    //pause
     rec.stop();
   } else {
-    //resume
     rec.record();
   }
 }
@@ -138,17 +120,17 @@ function pauseRecording() {
 function stopRecording() {
   console.log("stopButton clicked");
   time.stop = Date.now();
-  //tell the recorder to stop the recording
   rec.stop();
-
-  //stop microphone access
   gumStream.getAudioTracks()[0].stop();
-  
   document.getElementById("formats").innerHTML = "";
 
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(createDownloadLink);
-  rec.exportWAV(sendAudio);
+  //rec.exportWAV(sendAudio);
+  
+  // send to network!
+  sendAudio(rec.exportWAV,null,time);
+  
 }
 
 function createDownloadLink(blob) {
@@ -181,7 +163,8 @@ function createDownloadLink(blob) {
 
   //add the save to disk link to li
   li.appendChild(link);
-
+  
+  // render locally
   var tsid = Date.now();
   player.id = 'wave'+tsid;
   var pdiv = document.createElement("div");
@@ -216,9 +199,9 @@ const [sendAudio, getAudio] = room.makeAction('audio')
 
 // binary data is received as raw ArrayBuffers so your handling code should
 // interpret it in a way that makes sense
-getAudio((data, id) => (processAudio(data,id) ));
-function processAudio(data,id){
+getAudio((data, id, meta) => (processAudio(data,id,meta) ));
+function processAudio(data,id,meta){
   var blob = new Blob([data], {type: "audio/wav"})
-  console.log(blob,id)
-  createDownloadLink(blob)
+  console.log(blob,id,meta)
+  //createDownloadLink(blob)
 }

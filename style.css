@@ -93,7 +93,7 @@ audio::-webkit-media-controls-return-to-realtime-button {
 /* timeline */
 
  .vis-timeline {
-      border: 1px solid #c2c2c2;
+      border: 1px solid #e2e2e2;
       font-size: 8pt;
       background: transparent;
     }
@@ -108,7 +108,8 @@ audio::-webkit-media-controls-return-to-realtime-button {
 
     .vis-item,
     .vis-item.vis-line {
-      border-width: 3px;
+      border-width: 1px;
+      color: #e2e2e2;
     }
 
     .vis-item.vis-dot {
@@ -133,7 +134,7 @@ audio::-webkit-media-controls-return-to-realtime-button {
 
     .vis-time-axis .vis-grid.vis-minor {
       border-width: 1px;
-      border-color: grey;
+      border-color: #e2e2e2;
     }
 
     .vis-time-axis .vis-grid.vis-major {

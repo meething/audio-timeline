@@ -26,11 +26,15 @@ timeline.moveTo(Date.now(), {
   animation: false
 });
 
+// play on select
+var lastPlay;
 timeline.on('select', function (properties) {
-  console.log('selected items: ' + properties.items);
+  // console.log('selected items: ' + properties.items);
   var player = document.getElementById('wave'+properties.items);
-  console.log(player);
+  if (lastPlay) { lastPlay.pause(); }
   player.play();
+  lastPlay = player;
+  return false;
 });
 
 //$('button').click(function() {
@@ -231,10 +235,13 @@ function createDownloadLink(blob) {
 
   var tsid = Date.now();
   player.id = 'wave'+tsid;
+  var pdiv = document.createElement("div");
+  pdiv.innerHTML = "&#10148;"
+  pdiv.appendChild(player);
   var items = [
     {
       id: tsid,
-      content: player,
+      content: pdiv,
       group: 1,
       title: "audio",
       start: time.start,

@@ -1,4 +1,4 @@
-import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
+import { joinRoom } from "https://cdn.skypack.dev/trystero";
 
 const config = {appId: 'audiotimeline'}
 const room = joinRoom(config, 'lobby')
@@ -8,39 +8,28 @@ const room = joinRoom(config, 'lobby')
 var container = document.getElementById("visualization");
 
 // create a Group list
-var groupIds = [];
-groupIds.push(selfId)
-var groups = false;
-
-function refreshGroups(){
-  var upgroups = new vis.DataSet();
-  groupIds.forEach(function(id){
-    upgroups.add({ id: id+1, content: groupIds[id] });
-  });
-  groups = upgroups;
-  timeline.setGroups(upgroups);
-}
-
+var groups = new vis.DataSet();
+groups.add({ id: 1, content: "AUDIO" });
 // create a DataSet
 var data = new vis.DataSet();
 // add items
-
+/*
 data.add([
   {
-    id: 1,
+    id: 5,
     group: 1,
     content: "Start!",
     start: Date.now()
   }
 ]);
-
+*/
 
 // Configuration for the Timeline
 var options = {};
 
 // Create a Timeline
 var timeline = new vis.Timeline(container, data, options);
-refreshGroups();
+timeline.setGroups(groups);
 timeline.moveTo(Date.now(), {
   animation: false
 });
@@ -95,8 +84,16 @@ function startRecording() {
       document.getElementById("formats").innerHTML =
         "Recording: 1 channel pcm @ " + audioContext.sampleRate / 1000 + "kHz";
 
+      /*  assign to gumStream for later use  */
       gumStream = stream;
+
+      /* use the stream */
       input = audioContext.createMediaStreamSource(stream);
+
+      /* 
+    	Create the Recorder object and configure to record mono sound (1 channel)
+    	Recording 2 channels  will double the file size
+    */
       rec = new Recorder(input, {
         numChannels: 1
       });
@@ -128,25 +125,40 @@ function stopRecording() {
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(createDownloadLink);
-  rec.exportWAV(blob => sendAudio(blob));
+  rec.exportWAV(sendAudio);
   
 }
 
 function createDownloadLink(blob,remote) {
-  console.log('got data!',blob,remote)
-  
-  if (remote && !groupIds[remote]){
-    groupIds.push(remote);
-    refreshGroups();
-  }
-  
+  console.log('got data!',blob)
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
+  var li = document.createElement("li");
+  var link = document.createElement("a");
+
+  var filename = new Date().toISOString();
+
+  //add controls to the <audio> element
   au.controls = false;
-  au.src = url;
   if (remote) au.autoplay = true;
+  au.src = url;
 
   var player = au;
+
+  //save to disk link
+  link.href = url;
+  link.download = filename + ".wav"; //download forces the browser to donwload the file using the  filename
+  link.innerHTML = "Save to disk";
+
+  //add the new audio element to li
+  li.appendChild(au);
+
+  //add the filename to the li
+  li.appendChild(document.createTextNode(filename + ".wav "));
+
+  //add the save to disk link to li
+  li.appendChild(link);
+  
   // render locally
   var tsid = Date.now();
   player.id = 'wave'+tsid;
@@ -157,18 +169,18 @@ function createDownloadLink(blob,remote) {
     {
       id: tsid,
       content: pdiv,
-      group: 0,
+      group: 1,
       title: "audio",
       start: time.start || Date.now(),
       end: time.stop || Date.now()+600
     }
   ];
-  timeline.moveTo(time.start || Date.now()-600, {
+  timeline.moveTo(time.start || Date.now(), {
     animation: false
   });
   data.add(items);
   timeline.setGroups(groups);
-  //timeline.fit();
+  timeline.fit();
   time = {};
 }
 
@@ -186,5 +198,5 @@ getAudio((data, id, meta) => (processAudio(data,id,meta) ));
 function processAudio(data,id,meta){
   var blob = new Blob([data], {type: "audio/wav"})
   console.log(blob,id,meta)
-  createDownloadLink(blob,id)
+  createDownloadLink(blob,true)
 }

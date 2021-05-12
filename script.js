@@ -26,6 +26,13 @@ timeline.moveTo(Date.now(), {
   animation: false
 });
 
+timeline.on('select', function (properties) {
+  console.log('selected items: ' + properties.items);
+  var player = document.getElementById('wave'+properties.items);
+  console.log(player);
+  player.play();
+});
+
 //$('button').click(function() {
 window.addItem = function() {
   // Create a DataSet (allows two way data-binding)
@@ -197,7 +204,7 @@ function createDownloadLink(blob) {
   var filename = new Date().toISOString();
 
   //add controls to the <audio> element
-  au.controls = true;
+  au.controls = false;
   au.autoplay = true;
   au.src = url;
 
@@ -222,9 +229,11 @@ function createDownloadLink(blob) {
 
   console.log("html", player);
 
+  var tsid = Date.now();
+  player.id = 'wave'+tsid;
   var items = [
     {
-      id: Date.now(),
+      id: tsid,
       content: player,
       group: 1,
       title: "audio",

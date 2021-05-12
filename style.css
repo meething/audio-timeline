@@ -95,7 +95,7 @@ audio::-webkit-media-controls-return-to-realtime-button {
  .vis-timeline {
       border: 1px solid #c2c2c2;
       font-size: 8pt;
-      background: #ffecea;
+      background: transparent;
     }
 
     .vis-item {

@@ -3,10 +3,11 @@ var container = document.getElementById("visualization");
 
 // create a Group list
 var groups = new vis.DataSet();
-groups.add({ id: 1, content: "TALK" });
+groups.add({ id: 1, content: "AUDIO" });
 // create a DataSet
 var data = new vis.DataSet();
 // add items
+/*
 data.add([
   {
     id: 5,
@@ -15,6 +16,7 @@ data.add([
     start: Date.now()
   }
 ]);
+*/
 
 // Configuration for the Timeline
 var options = {};
@@ -29,7 +31,6 @@ timeline.moveTo(Date.now(), {
 // play on select
 var lastPlay;
 timeline.on('select', function (properties) {
-  // console.log('selected items: ' + properties.items);
   var player = document.getElementById('wave'+properties.items);
   if (lastPlay) { lastPlay.pause(); }
   player.play();
@@ -37,41 +38,8 @@ timeline.on('select', function (properties) {
   return false;
 });
 
-//$('button').click(function() {
-window.addItem = function() {
-  // Create a DataSet (allows two way data-binding)
-  var id = Date.now();
-  var url =
-    "http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3";
-  var html = "<div id='wave" + id + "'>audio</div>";
-  var items = [
-    {
-      id: 7,
-      content: html,
-      start: new Date()
-    }
-  ];
-  timeline.moveTo(new Date(), {
-    animation: false
-  });
-
-  data.add(items);
-  var wave = WaveSurfer.create({
-    container: "#wave" + id,
-    fillParent: true,
-    autoCenter: true,
-    mediaControls: true
-  });
-  wave.load(
-    "http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3"
-  );
-  wave.on("ready", function() {
-    wave.play();
-  });
-};
 
 // REC CODE
-
 var gumStream; //stream from getUserMedia()
 var rec; //Recorder.js object
 var input; //MediaStreamAudioSourceNode we'll be recording
@@ -80,16 +48,16 @@ var input; //MediaStreamAudioSourceNode we'll be recording
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext; //audio context to help us record
 
-var recordButton = document.getElementById("recordButton");
-var stopButton = document.getElementById("stopButton");
-var pauseButton = document.getElementById("pauseButton");
-
-//add events to those 2 buttons
-recordButton.addEventListener("click", startRecording);
-stopButton.addEventListener("click", stopRecording);
-pauseButton.addEventListener("click", pauseRecording);
+var talkButton = document.getElementById("talkButton");
+talkButton.addEventListener("click", swapRec);
 
 var time = {};
+var active = false;
+function swapRec() {
+  talkButton.innerHTML = active ? "🤙 Talk": "✋ Stop"
+  if (!active) { startRecording() } else { stopRecording() }
+  active = !active;
+}
 
 function startRecording() {
   console.log("recordButton clicked");
@@ -105,13 +73,6 @@ function startRecording() {
     video: false
   };
 
-  /*
-    	Disable the record button until we get a success or fail from getUserMedia() 
-	*/
-
-  recordButton.disabled = true;
-  stopButton.disabled = false;
-  pauseButton.disabled = false;
 
   /*
     	We're using the standard promise based getUserMedia() 
@@ -156,10 +117,7 @@ function startRecording() {
       console.log("Recording started");
     })
     .catch(function(err) {
-      //enable the record button if getUserMedia() fails
-      recordButton.disabled = false;
-      stopButton.disabled = true;
-      pauseButton.disabled = true;
+     
     });
 }
 
@@ -168,26 +126,15 @@ function pauseRecording() {
   if (rec.recording) {
     //pause
     rec.stop();
-    pauseButton.innerHTML = "Resume";
   } else {
     //resume
     rec.record();
-    pauseButton.innerHTML = "Pause";
   }
 }
 
 function stopRecording() {
   console.log("stopButton clicked");
   time.stop = Date.now();
-
-  //disable the stop button, enable the record too allow for new recordings
-  stopButton.disabled = true;
-  recordButton.disabled = false;
-  pauseButton.disabled = true;
-
-  //reset button just in case the recording is stopped while paused
-  pauseButton.innerHTML = "Pause";
-
   //tell the recorder to stop the recording
   rec.stop();
 

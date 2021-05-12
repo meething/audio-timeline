@@ -147,12 +147,12 @@ function stopRecording() {
   document.getElementById("formats").innerHTML = "";
 
   //create the wav blob and pass it on to createDownloadLink
-  rec.exportWAV(sendAudio);
   rec.exportWAV(createDownloadLink);
+  rec.exportWAV(sendAudio);
 }
 
 function createDownloadLink(blob) {
-  console.log('got data!')
+  console.log('got data!',blob)
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   var li = document.createElement("li");
@@ -216,4 +216,9 @@ const [sendAudio, getAudio] = room.makeAction('audio')
 
 // binary data is received as raw ArrayBuffers so your handling code should
 // interpret it in a way that makes sense
-getAudio((data, id) => (createDownloadLink(new Blob([data]))));
+getAudio((data, id) => (processAudio(data,id) ));
+function processAudio(data,id){
+  var blob = new Blob([data], {type: "audio/wav"})
+  console.log(blob,id)
+  createDownloadLink(blob)
+}

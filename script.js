@@ -76,7 +76,7 @@ var time = {}
 
 function startRecording() {
   console.log("recordButton clicked");
-  time.start = new Date();
+  time.start = Date.now();
 
   /*
   	Simple constraints object, for more advanced audio features see
@@ -157,7 +157,7 @@ function pauseRecording() {
 
 function stopRecording() {
   console.log("stopButton clicked");
-  time.stop = new Date();
+  time.stop = Date.now();
 
   //disable the stop button, enable the record too allow for new recordings
   stopButton.disabled = true;
@@ -190,6 +190,8 @@ function createDownloadLink(blob) {
 	//add controls to the <audio> element
 	au.controls = true;
 	au.src = url;
+  
+  var player = au;
 
 	//save to disk link
 	link.href = url;
@@ -227,15 +229,17 @@ function createDownloadLink(blob) {
 	//add the li element to the ol
 	recordingsList.appendChild(li);
   
+  console.log('html', player);
+  
    var items = [{
     id: Date.now(),
-    content: au,
-    start: time.start,
-    end: time.stop
-  }];
+    content: player,
+    start: time.start
+   }];
   timeline.moveTo(time.start, {
     animation: false
   });
+  console.log(items)
   data.add(items);
   time = {};
   

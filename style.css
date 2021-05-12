@@ -96,11 +96,12 @@ audio::-webkit-media-controls-return-to-realtime-button {
       border: 1px solid #e2e2e2;
       font-size: 8pt;
       background: transparent;
+      height: 50%;
     }
 
     .vis-item {
-      border-color: #F991A3;
-      background-color: pink;
+      border-color: #afbfcf;
+      background-color: #afdfc3;
       font-size: 15pt;
       color: black;
       box-shadow: 5px 5px 20px rgba(128,128,128, 0.5);
@@ -109,7 +110,7 @@ audio::-webkit-media-controls-return-to-realtime-button {
     .vis-item,
     .vis-item.vis-line {
       border-width: 1px;
-      color: #e2e2e2;
+      color: #ffffff;
     }
 
     .vis-item.vis-dot {

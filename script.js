@@ -236,7 +236,7 @@ function createDownloadLink(blob) {
   var tsid = Date.now();
   player.id = 'wave'+tsid;
   var pdiv = document.createElement("div");
-  pdiv.innerHTML = "&#10148;"
+  pdiv.innerHTML = "👋 &#10148;"
   pdiv.appendChild(player);
   var items = [
     {

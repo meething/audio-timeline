@@ -1,4 +1,4 @@
-import { joinRoom } from "https://cdn.skypack.dev/trystero";
+import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 const config = {appId: 'audiotimeline'}
 const room = joinRoom(config, 'lobby')
@@ -84,16 +84,8 @@ function startRecording() {
       document.getElementById("formats").innerHTML =
         "Recording: 1 channel pcm @ " + audioContext.sampleRate / 1000 + "kHz";
 
-      /*  assign to gumStream for later use  */
       gumStream = stream;
-
-      /* use the stream */
       input = audioContext.createMediaStreamSource(stream);
-
-      /* 
-    	Create the Recorder object and configure to record mono sound (1 channel)
-    	Recording 2 channels  will double the file size
-    */
       rec = new Recorder(input, {
         numChannels: 1
       });
@@ -175,7 +167,7 @@ function createDownloadLink(blob,remote) {
       end: time.stop || Date.now()+600
     }
   ];
-  timeline.moveTo(time.start || Date.now(), {
+  timeline.moveTo(time.start || Date.now()-600, {
     animation: false
   });
   data.add(items);

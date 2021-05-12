@@ -123,29 +123,24 @@ function stopRecording() {
   rec.stop();
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
-
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(createDownloadLink);
-  //rec.exportWAV(sendAudio);
-  
-  // send to network!
-  sendAudio(rec.exportWAV,null,time);
+  rec.exportWAV(sendAudio);
   
 }
 
-function createDownloadLink(blob) {
+function createDownloadLink(blob,remote) {
   console.log('got data!',blob)
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   var li = document.createElement("li");
   var link = document.createElement("a");
 
-  //name of .wav file to use during upload and download (without extendion)
   var filename = new Date().toISOString();
 
   //add controls to the <audio> element
   au.controls = false;
-  au.autoplay = true;
+  if (remote) au.autoplay = true;
   au.src = url;
 
   var player = au;
@@ -176,11 +171,11 @@ function createDownloadLink(blob) {
       content: pdiv,
       group: 1,
       title: "audio",
-      start: time.start,
-      end: time.stop
+      start: time.start || Date.now(),
+      end: time.stop || Date.now()+600
     }
   ];
-  timeline.moveTo(time.start, {
+  timeline.moveTo(time.start || Date.now(), {
     animation: false
   });
   data.add(items);
@@ -203,5 +198,5 @@ getAudio((data, id, meta) => (processAudio(data,id,meta) ));
 function processAudio(data,id,meta){
   var blob = new Blob([data], {type: "audio/wav"})
   console.log(blob,id,meta)
-  //createDownloadLink(blob)
+  createDownloadLink(blob,true)
 }

@@ -1,5 +1,10 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
+var peer = new Peer(selfId);
+peer.on('open', function(id) {
+		console.log('My peer ID is: ' + id, selfId);
+});
+
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
 
@@ -179,3 +184,10 @@ async function processAudio(data, id, meta) {
   createDownloadLink(blob, true);
 }
 
+function base64(blob){
+  var reader = new FileReader();
+  reader.readAsDataURL(blob);
+  reader.onloadend = function() {
+    return reader.result;
+  };
+}

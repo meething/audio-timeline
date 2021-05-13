@@ -12,7 +12,7 @@ const [sendGunMsg, getGunMsg] = room.makeAction('GunMsg')
 getGunMsg((data, id)=> {
   console.log('in---->',data, id)
   gun._.on('in', data.msg)
- //root.once(console.log)
+  root.once(console.log)
 })
 
 gun._.on('out', function(msg){
@@ -146,11 +146,11 @@ function stopRecording() {
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(createDownloadLink);
+  rec.exportWAV(sendGun)
 }
 
 function createDownloadLink(blob, remote) {
   console.log("got data!", blob);
-  var blob2 = blob; //new Blob(blob);
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   //add controls to the <audio> element
@@ -181,8 +181,11 @@ function createDownloadLink(blob, remote) {
   timeline.setGroups(groups);
   timeline.fit();
   time = {};
+}
+
+function sendGun (blob) {
   var reader = new FileReader();
-  reader.readAsDataURL(blob2); 
+  reader.readAsDataURL(blob); 
   reader.onloadend = function() {
     var base64data = reader.result;                
     console.log(base64data.length);

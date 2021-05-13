@@ -204,7 +204,7 @@ function sendGun(blob, time, selfId) {
       .get("file")
       .put({ data: base64data });
     */
-    root.get('audio').get(selfId).put({id: selfId, time: time, data:base64data})
+    gun.get(roomname).get('audio').get(selfId).put({id: selfId, time: time, data:base64data})
   };
 }
 

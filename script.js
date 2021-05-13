@@ -10,37 +10,18 @@ const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
 window.room = room;
 
-// DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
-
-// create a Group list
 var groups = new vis.DataSet();
 groups.add({ id: 1, content: "AUDIO" });
-// create a DataSet
 var data = new vis.DataSet();
-// add items
-/*
-data.add([
-  {
-    id: 5,
-    group: 1,
-    content: "Start!",
-    start: Date.now()
-  }
-]);
-*/
-
-// Configuration for the Timeline
 var options = {};
 
-// Create a Timeline
 var timeline = new vis.Timeline(container, data, options);
 timeline.setGroups(groups);
 timeline.moveTo(Date.now(), {
   animation: false
 });
 
-// Play audio on select
 var lastPlay;
 timeline.on("select", function(properties) {
   var player = document.getElementById("wave" + properties.items);
@@ -57,7 +38,6 @@ var gumStream; //stream from getUserMedia()
 var rec; //Recorder.js object
 var input; //MediaStreamAudioSourceNode we'll be recording
 
-// shim for AudioContext when it's not avb.
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext; //audio context to help us record
 
@@ -189,10 +169,11 @@ async function processAudio(data, id, meta) {
 
 function sendPeers(data,time,id){
   var send = function(p){
-    console.log('sending to peer',p)
+    //console.log('sending to peer',p)
     var conn = peer.connect(p);
     conn.on('open', function() {
       conn.send({data,time,id})
+      //conn.close();
     })
   }
   everyone(send);

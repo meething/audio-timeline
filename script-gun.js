@@ -145,7 +145,7 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
-  rec.exportWAV(blob => createDownloadLink(blob, time));
+  rec.exportWAV(blob => createDownloadLink(blob, time, selfId));
   rec.exportWAV(blob => sendGun(blob, time, selfId));
 }
 
@@ -201,15 +201,18 @@ function sendGun(blob, time, selfId) {
       .get("file")
       .put({ data: base64data });
     */
-    root.get('audio').put({id: selfId, time: timestart})
+    root.get('audio').get(selfId).put({id: selfId, time: timestart, data:base64data})
   };
 }
 
 // is this right?
 root.get('audio').on(audio => shotGun(audio))
-function shotGun(data){
+async function shotGun(data){
   console.log('audio in!',data);
+  var keys = await gun.get(roomname).promOnce()
+  console.log(keys.data);
   if (!data.time||!data.data||!data.id) return;
+  if (data.id === selfId) return;
   fetch(data.data)
     .then(res => res.blob())
     .then(blob => createDownloadLink(blob,data.time,data.id))

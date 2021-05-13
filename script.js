@@ -6,6 +6,7 @@ var peer = new Peer(selfId);
 peer.on('open', function(id) {
 		console.log('My peer ID is: ' + id, selfId);
 });
+peer.on('connection', handlePeerMessage);
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
@@ -190,4 +191,17 @@ async function processAudio(data, id, meta) {
   //var blob = data;
   console.log(blob, id, meta);
   createDownloadLink(blob, true);
+}
+
+function sendPeerMessage(msg){
+  
+}
+
+function handlePeerMessage(msg){
+  console.log('peer msg',msg)
+}
+
+function everyone(cb){
+  var peers = room.getPeers()
+  peers.forEach(peer => cb(peer))
 }

@@ -1,18 +1,21 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 const gun = Gun();
-
+const roomname = "lobby"
 const config = { appId: "audiotimeline" };
-const room = joinRoom(config, "lobby");
+const room = joinRoom(config, roomname);
 const [sendGunMsg, getGunMsg] = room.makeAction('GunMsg')
 
 getGunMsg((data, id)=> {
   gun._.on('in', data.msg)
+  gun.get(roomname).once(console.log)
 })
 
 gun._.on('out', function(msg) => {
-         sendGunMsg({msg:msg})
-         })
+  sendGunMsg({msg:msg})
+})
+
+var root = gun.get(roomname)
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 
@@ -137,13 +140,12 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
-  rec.getBuffer(console.log)
   rec.exportWAV(createDownloadLink);
-  rec.exportWAV(sendAudio);
 }
 
 function createDownloadLink(blob, remote) {
   console.log("got data!", blob);
+  var blob2 = new Blob(blob);
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   //add controls to the <audio> element
@@ -174,6 +176,12 @@ function createDownloadLink(blob, remote) {
   timeline.setGroups(groups);
   timeline.fit();
   time = {};
+  var reader = new FileReader();
+   reader.readAsDataURL(blob); 
+ reader.onloadend = function() {
+     var base64data = reader.result;                
+     console.log(base64data);
+ }
 }
 
 // ROOM EVENTS

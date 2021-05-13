@@ -8,6 +8,8 @@ var root = gun.get(roomname);
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, roomname);
+
+console.log("IIII AAAMMM", selfId);
 //const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
 /*
 getGunMsg((data, id) => {
@@ -208,9 +210,11 @@ function sendGun(blob, time, selfId) {
 // is this right?
 root.get('audio').on(audio => shotGun(audio))
 async function shotGun(data){
-  console.log('audio in!',data);
+  console.log('audio in!',data)
+  var peers = await room.getPeers()
+  console.log('connected to', peers)
   var keys = await gun.get(roomname).promOnce()
-  console.log(keys.data);
+  console.log('gun graph',(await keys.ref.get('audio').get('v3TWckIQHL2OZMhCHY1y').promOnce()).data);
   if (!data.time||!data.data||!data.id) return;
   if (data.id === selfId) return;
   fetch(data.data)

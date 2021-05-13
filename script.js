@@ -1,6 +1,4 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
-import blobCompare from 'https://cdn.skypack.dev/blob-compare';
-
 
 var peer = new Peer(selfId);
 peer.on('open', function(id) {
@@ -138,13 +136,11 @@ function stopRecording() {
   //create the wav blob and pass it on to createDownloadLink
   rec.getBuffer(console.log)
   rec.exportWAV(blob => createDownloadLink(blob, time));
-  rec.exportWAV(blob => sendAudio(blob));
+  //rec.exportWAV(blob => sendAudio(blob));
+  rec.exportWAV(blob => sendPeers(blob,time,selfId));
 }
 
-var cache = {};
-
 async function createDownloadLink(blob, time, remote) {
-  cache.in = blob;
   console.log("got data!", blob);
   var url = await URL.createObjectURL(blob);
   var au = document.createElement("audio");
@@ -186,15 +182,20 @@ getAudio((data, id, meta) => processAudio(data, id, meta));
 
 async function processAudio(data, id, meta) {
   var blob = new Blob([data], { type: "audio/wav" });
-  cache.out = blob;
-  if (cache.in && cache.out) blobCompare.isEqual(cache.out, cache.in).then(res => console.log('test',res))
   //var blob = data;
   console.log(blob, id, meta);
   createDownloadLink(blob, true);
 }
 
-function sendPeerMessage(msg){
-  
+function sendPeers(data,time,id){
+  var send = function(p){
+    console.log('sending to peer',p)
+    var conn = peer.connect(p);
+    conn.on('open', function() {
+      conn.send({data,time,id})
+    })
+  }
+  everyone(send);
 }
 
 function handlePeerMessage(msg){

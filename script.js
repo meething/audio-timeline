@@ -1,5 +1,5 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
-import { blobCompare } from 'https://cdn.skypack.dev/blob-compare';
+import blobCompare from 'https://cdn.skypack.dev/blob-compare';
 
 
 var peer = new Peer(selfId);
@@ -185,7 +185,7 @@ getAudio((data, id, meta) => processAudio(data, id, meta));
 async function processAudio(data, id, meta) {
   var blob = new Blob([data], { type: "audio/wav" });
   cache.out = blob;
-  blobCompare.isEqual(cache.out, cache.in).then(res => console.log('test',res))
+  if (cache.in && cache.out) blobCompare.isEqual(cache.out, cache.in).then(res => console.log('test',res))
   //var blob = data;
   console.log(blob, id, meta);
   createDownloadLink(blob, true);

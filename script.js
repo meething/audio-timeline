@@ -1,10 +1,10 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 var peer = new Peer(selfId);
-peer.on('open', function(id) {
-		console.log('My peer ID is: ' + id, selfId);
+peer.on("open", function(id) {
+  console.log("My peer ID is: " + id, selfId);
 });
-peer.on('connection', handlePeerConnect);
+peer.on("connection", handlePeerConnect);
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
@@ -114,10 +114,10 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
-  rec.getBuffer(console.log)
+  rec.getBuffer(console.log);
   rec.exportWAV(blob => createDownloadLink(blob, time));
   //rec.exportWAV(blob => sendAudio(blob));
-  rec.exportWAV(blob => sendPeers(blob,time,selfId));
+  rec.exportWAV(blob => sendPeers(blob, time, selfId));
 }
 
 async function createDownloadLink(blob, time, remote) {
@@ -167,29 +167,31 @@ async function processAudio(data, id, meta) {
   createDownloadLink(blob, true);
 }
 
-function sendPeers(data,time,id){
-  var send = function(p){
+function sendPeers(data, time, id) {
+  var send = function(p) {
     //console.log('sending to peer',p)
     var conn = peer.connect(p);
-    conn.on('open', function() {
-      conn.send({data,time,id})
+    conn.on("open", function() {
+       return new Promise(function(resolve, reject) {
+            conn.send({ data, time, id })
+         }).then(console.log('sent'))
       //conn.close();
-    })
-  }
+    });
+  };
   everyone(send);
 }
 
-function handlePeerConnect(conn){
-   console.log('got connection',conn)
-   conn.on('data', handlePeerMessage)
+function handlePeerConnect(conn) {
+  console.log("got connection", conn);
+  conn.on("data", handlePeerMessage);
 }
 
-function handlePeerMessage(msg){
-  console.log('peer msg',msg)
-  createDownloadLink(new Blob([msg.data]), msg.time, msg.id)
+function handlePeerMessage(msg) {
+  console.log("peer msg", msg);
+  createDownloadLink(new Blob([msg.data]), msg.time, msg.id);
 }
 
-function everyone(cb){
-  var peers = room.getPeers()
-  peers.forEach(peer => cb(peer))
+function everyone(cb) {
+  var peers = room.getPeers();
+  peers.forEach(peer => cb(peer));
 }

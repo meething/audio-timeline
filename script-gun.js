@@ -1,25 +1,26 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const gun = Gun();
+const peers = ['https://meething-dam.glitch.me/gun']
+const gun = Gun({peers:peers});
 
 const roomname = "gun";
 var root = gun.get(roomname);
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, roomname);
-const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
-
+//const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
+/*
 getGunMsg((data, id) => {
-  //console.log("in---->", data, id);
+  console.log("in---->", data, id);
   gun._.on("in", data.msg);
   //root.once(console.log);
 });
 
 gun._.on("out", function(msg) {
-  //console.log("out ---->", msg);
+  console.log("out ---->", msg);
   sendGunMsg({ msg: msg });
 });
-
+*/
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 
@@ -200,7 +201,7 @@ function sendGun(blob, time, selfId) {
       .get("file")
       .put({ data: base64data });
     */
-    root.get('audio').put({id: selfId, time: timestart, data: base64data })
+    root.get('audio').put({id: selfId, time: timestart})
   };
 }
 

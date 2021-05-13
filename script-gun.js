@@ -2,24 +2,23 @@ import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 const gun = Gun();
 
-const roomname = "gun"
-var root = gun.get(roomname)
+const roomname = "gun";
+var root = gun.get(roomname);
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, roomname);
-const [sendGunMsg, getGunMsg] = room.makeAction('GunMsg')
+const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
 
-getGunMsg((data, id)=> {
-  console.log('in---->',data, id)
-  gun._.on('in', data.msg)
-  root.once(console.log)
-})
+getGunMsg((data, id) => {
+  console.log("in---->", data, id);
+  gun._.on("in", data.msg);
+  root.once(console.log);
+});
 
-gun._.on('out', function(msg){
-  console.log('out ---->',msg)
-  sendGunMsg({msg:msg})
-})
-
+gun._.on("out", function(msg) {
+  console.log("out ---->", msg);
+  sendGunMsg({ msg: msg });
+});
 
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
@@ -146,7 +145,7 @@ function stopRecording() {
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
   rec.exportWAV(blob => createDownloadLink(blob));
-  rec.exportWAV(blob => sendGun(blob,time,selfId))
+  rec.exportWAV(blob => sendGun(blob, time, selfId));
 }
 
 function createDownloadLink(blob, remote) {
@@ -183,19 +182,33 @@ function createDownloadLink(blob, remote) {
   time = {};
 }
 
-function sendGun (blob,time,selfId) {
+function sendGun(blob, time, selfId) {
   var reader = new FileReader();
-  reader.readAsDataURL(blob); 
+  reader.readAsDataURL(blob);
   reader.onloadend = function() {
-    var base64data = reader.result;                
-    console.log(base64data.length);
-    var timestart = JSON.stringify(time.start)
-    root.get('123').get('meta').put({name:selfId,time:time})
-    root.get('123').get('file').put({data:base64data})
-    //root.get('audio).put({id: selfId, time: time, data: base64data })
-  }
+    var base64data = reader.result;
+    console.log('base64data.length);
+    var timestart = JSON.stringify(time.start);
+    /*
+    root
+      .get("123")
+      .get("meta")
+      .put({ name: selfId, time: time });
+    root
+      .get("123")
+      .get("file")
+      .put({ data: base64data });
+    */
+    root.get('audio').put({id: selfId, time: time, data: base64data })
+  };
 }
 
+root.get('audio').on(audio => console.log('audio in!',audio))
+
+/*
+
+
+*/
 // ROOM EVENTS
 /*
 const [sendAudio, getAudio] = room.makeAction("audio");

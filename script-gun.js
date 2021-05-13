@@ -1,7 +1,7 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 const peers = ['https://meething-dam.glitch.me/gun']
-const gun = Gun({peers:peers});
+const gun = Gun({peers:peers, localstorage:false});
 
 const roomname = "gun";
 var root = gun.get(roomname);
@@ -192,7 +192,6 @@ function sendGun(blob, time, selfId) {
   reader.onloadend = function() {
     var base64data = reader.result;
     console.log('buffer',base64data.length);
-    var timestart = JSON.stringify(time);
     /*
     root
       .get("123")
@@ -203,7 +202,7 @@ function sendGun(blob, time, selfId) {
       .get("file")
       .put({ data: base64data });
     */
-    root.get('audio').get(selfId).put({id: selfId, time: timestart, data:base64data})
+    root.get('audio').get(selfId).put({id: selfId, time: time, data:base64data})
   };
 }
 

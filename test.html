@@ -9,11 +9,11 @@
 <body><pre id="log"></pre></body>
 <script>
   // instantiate our bugout instance with previously saved seed (if any)
-  var b = new Bugout({seed: localStorage["bugout-demo-seed"]});
+  var b = new Bugout({seed: localStorage["bugout-audiotimeline"]});
   window.b =  b;
 
   // save the seed for next time
-  localStorage["bugout-demo-seed"] = b.seed;
+  localStorage["bugout-audiotimeline"] = b.seed;
 
   // log this server's address
   log("address:", b.address());

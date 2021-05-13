@@ -9,6 +9,7 @@ peer.on('open', function(id) {
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
+window.room = room;
 
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");

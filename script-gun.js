@@ -14,7 +14,7 @@ getGunMsg((data, id)=> {
  root.once(console.log)
 })
 
-gun._.on('out', function(msg) => {
+gun._.on('out', function(msg){
   sendGunMsg({msg:msg})
 })
 
@@ -148,7 +148,7 @@ function stopRecording() {
 
 function createDownloadLink(blob, remote) {
   console.log("got data!", blob);
-  var blob2 = new Blob(blob);
+  var blob2 = blob; //new Blob(blob);
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   //add controls to the <audio> element
@@ -184,7 +184,7 @@ function createDownloadLink(blob, remote) {
   reader.onloadend = function() {
     var base64data = reader.result;                
     console.log(base64data);
-    root
+    root.get(time.start+time.stop).put(base64data);
   }
 }
 

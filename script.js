@@ -4,7 +4,7 @@ var peer = new Peer(selfId);
 peer.on('open', function(id) {
 		console.log('My peer ID is: ' + id, selfId);
 });
-peer.on('connection', handlePeerMessage);
+peer.on('connection', handlePeerConnect);
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
@@ -47,7 +47,7 @@ timeline.on("select", function(properties) {
   if (lastPlay) {
     lastPlay.pause();
   }
-  player.play();
+  if (player.play) player.play();
   lastPlay = player;
   return false;
 });
@@ -198,8 +198,14 @@ function sendPeers(data,time,id){
   everyone(send);
 }
 
+function handlePeerConnect(conn){
+   console.log('got connection',conn)
+   conn.on('data', handlePeerMessage)
+}
+
 function handlePeerMessage(msg){
   console.log('peer msg',msg)
+  createDownloadLink(new Blob([msg.data]), msg.time, msg.id)
 }
 
 function everyone(cb){

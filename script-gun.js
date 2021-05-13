@@ -1,21 +1,24 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 const gun = Gun();
+
 const roomname = "lobby"
+var root = gun.get(roomname)
+
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, roomname);
 const [sendGunMsg, getGunMsg] = room.makeAction('GunMsg')
 
 getGunMsg((data, id)=> {
   gun._.on('in', data.msg)
-  gun.get(roomname).once(console.log)
+ root.once(console.log)
 })
 
 gun._.on('out', function(msg) => {
   sendGunMsg({msg:msg})
 })
 
-var root = gun.get(roomname)
+
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 
@@ -177,11 +180,12 @@ function createDownloadLink(blob, remote) {
   timeline.fit();
   time = {};
   var reader = new FileReader();
-   reader.readAsDataURL(blob); 
- reader.onloadend = function() {
-     var base64data = reader.result;                
-     console.log(base64data);
- }
+  reader.readAsDataURL(blob2); 
+  reader.onloadend = function() {
+    var base64data = reader.result;                
+    console.log(base64data);
+    root
+  }
 }
 
 // ROOM EVENTS

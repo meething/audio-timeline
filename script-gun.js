@@ -57,7 +57,7 @@ timeline.on("select", function(properties) {
   if (lastPlay) {
     lastPlay.pause();
   }
-  player.play();
+  if (player && player.play) player.play();
   lastPlay = player;
   return false;
 });
@@ -149,7 +149,8 @@ function stopRecording() {
 }
 
 function createDownloadLink(blob, time, remote) {
-  console.log("got data!", blob);
+  console.log("got data!", data, time, remote);
+  if (remote == selfId) remote = false;
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   //add controls to the <audio> element
@@ -188,7 +189,7 @@ function sendGun(blob, time, selfId) {
   reader.onloadend = function() {
     var base64data = reader.result;
     console.log('buffer',base64data.length);
-    var timestart = JSON.stringify(time.start);
+    var timestart = JSON.stringify(time);
     /*
     root
       .get("123")
@@ -199,15 +200,19 @@ function sendGun(blob, time, selfId) {
       .get("file")
       .put({ data: base64data });
     */
-    root.get('audio').put({id: selfId, time: time, data: base64data })
+    root.get('audio').put({id: selfId, time: timestart, data: base64data })
   };
 }
 
+// is this right?
 root.get('audio').on(audio => shotGun(audio))
 function shotGun(data){
   console.log('audio in!',data);
   if (!data.time||!data.data||!data.id) return;
-  createDownloadLink(data.data,data.time,data.id)
+  fetch(data.data)
+    .then(res => res.blob())
+    .then(blob => createDownloadLink(blob,data.time,data.id))
+  
 }
 
 

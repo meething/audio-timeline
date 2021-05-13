@@ -173,9 +173,8 @@ function sendPeers(data, time, id) {
     var conn = peer.connect(p);
     conn.on("open", function() {
        return new Promise(function(resolve, reject) {
-            conn.send({ data, time, id })
-         }).then(console.log('sent'))
-      //conn.close();
+         conn.send({ data, time, id })
+       }).then(console.log('sent')) //conn.close();
     });
   };
   everyone(send);

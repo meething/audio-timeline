@@ -127,6 +127,7 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
+  rec.getBuffer(console.log)
   rec.exportWAV(createDownloadLink);
   rec.exportWAV(sendAudio);
 }
@@ -172,8 +173,21 @@ const [sendAudio, getAudio] = room.makeAction("audio");
 getAudio((data, id, meta) => processAudio(data, id, meta));
 
 async function processAudio(data, id, meta) {
+  getBufferCallback(data);
   var blob = new Blob([data], { type: "audio/wav" });
   //var blob = data;
   console.log(blob, id, meta);
-  createDownloadLink(blob, true);
+  //createDownloadLink(blob, true);
+}
+
+v
+
+function getBufferCallback( buffers ) {
+	var newSource = audioContext.createBufferSource();
+	var newBuffer = audioContext.createBuffer( 2, data.length, audioContext.sampleRate );
+	newBuffer.getChannelData(0).set(data);
+	newSource.buffer = newBuffer;
+
+	newSource.connect( audioContext.destination );
+	newSource.start(0);
 }

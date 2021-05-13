@@ -192,6 +192,7 @@ function sendGun (blob,time,selfId) {
     var timestart = JSON.stringify(time.start)
     root.get('123').get('meta').put({name:selfId,time:time})
     root.get('123').get('file').put({data:base64data})
+    //root.get('audio).put({id: selfId, time: time, data: base64data })
   }
 }
 

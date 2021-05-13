@@ -1,8 +1,7 @@
-import { joinRoom } from "https://cdn.skypack.dev/trystero";
+import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const config = {appId: 'audiotimeline'}
-const room = joinRoom(config, 'lobby')
-
+const config = { appId: "audiotimeline" };
+const room = joinRoom(config, "lobby");
 
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
@@ -34,16 +33,17 @@ timeline.moveTo(Date.now(), {
   animation: false
 });
 
-// play on select
+// Play audio on select
 var lastPlay;
-timeline.on('select', function (properties) {
-  var player = document.getElementById('wave'+properties.items);
-  if (lastPlay) { lastPlay.pause(); }
+timeline.on("select", function(properties) {
+  var player = document.getElementById("wave" + properties.items);
+  if (lastPlay) {
+    lastPlay.pause();
+  }
   player.play();
   lastPlay = player;
   return false;
 });
-
 
 // REC CODE
 var gumStream; //stream from getUserMedia()
@@ -60,8 +60,12 @@ talkButton.addEventListener("click", swapRec);
 var time = {};
 var active = false;
 function swapRec() {
-  talkButton.innerHTML = active ? "🤙 Talk": "✋ Stop"
-  if (!active) { startRecording() } else { stopRecording() }
+  talkButton.innerHTML = active ? "🤙 Talk" : "✋ Stop";
+  if (!active) {
+    startRecording();
+  } else {
+    stopRecording();
+  }
   active = !active;
 }
 
@@ -77,7 +81,6 @@ function startRecording() {
   navigator.mediaDevices
     .getUserMedia(constraints)
     .then(function(stream) {
- 
       audioContext = new AudioContext();
 
       //update the format
@@ -104,7 +107,7 @@ function startRecording() {
       console.log("Recording started");
     })
     .catch(function(err) {
-       console.log(err)
+      console.log(err);
     });
 }
 
@@ -128,8 +131,8 @@ function stopRecording() {
   rec.exportWAV(sendAudio);
 }
 
-function createDownloadLink(blob,remote) {
-  console.log('got data!',blob)
+function createDownloadLink(blob, remote) {
+  console.log("got data!", blob);
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
   //add controls to the <audio> element
@@ -138,12 +141,11 @@ function createDownloadLink(blob,remote) {
   au.src = url;
   var player = au;
 
-  
   // render locally
   var tsid = Date.now();
-  player.id = 'wave'+tsid;
+  player.id = "wave" + tsid;
   var pdiv = document.createElement("div");
-  pdiv.innerHTML = "👋 &#10148;"
+  pdiv.innerHTML = "👋 &#10148;";
   pdiv.appendChild(player);
   var items = [
     {
@@ -163,16 +165,15 @@ function createDownloadLink(blob,remote) {
   time = {};
 }
 
-
 // ROOM EVENTS
 
-const [sendAudio, getAudio] = room.makeAction('audio')
+const [sendAudio, getAudio] = room.makeAction("audio");
 
-getAudio((data, id, meta) => (processAudio(data,id,meta)));
+getAudio((data, id, meta) => processAudio(data, id, meta));
 
-async function processAudio(data,id,meta){
-  var blob = new Blob([data], {type: "audio/wav"})
+async function processAudio(data, id, meta) {
+  var blob = new Blob([data], { type: "audio/wav" });
   //var blob = data;
-  console.log(blob,id,meta)
-  createDownloadLink(blob, true)
+  console.log(blob, id, meta);
+  createDownloadLink(blob, true);
 }

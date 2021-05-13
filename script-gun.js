@@ -2,7 +2,7 @@ import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
 const gun = Gun();
 
-const roomname = "lobby"
+const roomname = "gun"
 var root = gun.get(roomname)
 
 const config = { appId: "audiotimeline" };
@@ -10,11 +10,13 @@ const room = joinRoom(config, roomname);
 const [sendGunMsg, getGunMsg] = room.makeAction('GunMsg')
 
 getGunMsg((data, id)=> {
+  console.log('in---->',data, id)
   gun._.on('in', data.msg)
- root.once(console.log)
+ //root.once(console.log)
 })
 
 gun._.on('out', function(msg){
+  console.log('out ---->',msg)
   sendGunMsg({msg:msg})
 })
 
@@ -183,13 +185,13 @@ function createDownloadLink(blob, remote) {
   reader.readAsDataURL(blob2); 
   reader.onloadend = function() {
     var base64data = reader.result;                
-    console.log(base64data);
-    root.get(time.start+time.stop).put(base64data);
+    console.log(base64data.length);
+    root.get(time.start).put(base64data);
   }
 }
 
 // ROOM EVENTS
-
+/*
 const [sendAudio, getAudio] = room.makeAction("audio");
 
 getAudio((data, id, meta) => processAudio(data, id, meta));
@@ -200,4 +202,4 @@ async function processAudio(data, id, meta) {
   console.log(blob, id, meta);
   createDownloadLink(blob, true);
 }
-
+*/

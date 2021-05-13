@@ -1,4 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
+import { blobCompare } from 'https://cdn.skypack.dev/blob-compare';
+
 
 var peer = new Peer(selfId);
 peer.on('open', function(id) {
@@ -133,13 +135,16 @@ function stopRecording() {
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
   rec.getBuffer(console.log)
-  rec.exportWAV(createDownloadLink);
-  rec.exportWAV(sendAudio);
+  rec.exportWAV(blob => createDownloadLink(blob, time));
+  rec.exportWAV(blob => sendAudio(blob));
 }
 
-function createDownloadLink(blob, remote) {
+var cache = {};
+
+async function createDownloadLink(blob, time, remote) {
+  cache.in = blob;
   console.log("got data!", blob);
-  var url = URL.createObjectURL(blob);
+  var url = await URL.createObjectURL(blob);
   var au = document.createElement("audio");
   //add controls to the <audio> element
   au.controls = false;
@@ -179,15 +184,9 @@ getAudio((data, id, meta) => processAudio(data, id, meta));
 
 async function processAudio(data, id, meta) {
   var blob = new Blob([data], { type: "audio/wav" });
+  cache.out = blob;
+  blobCompare.isEqual(cache.out, cache.in).then(res => console.log('test',res))
   //var blob = data;
   console.log(blob, id, meta);
   createDownloadLink(blob, true);
-}
-
-function base64(blob){
-  var reader = new FileReader();
-  reader.readAsDataURL(blob);
-  reader.onloadend = function() {
-    return reader.result;
-  };
 }

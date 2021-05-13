@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gun Audio Timeline</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.2.0/vis.min.js"></script>
+    <script src=""
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.2.0/vis.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/script.js" defer></script>
+  </head>
+  <body>
+    <div id="controls">
+      <button class="btn btn-light" id="talkButton">🤙 Talk</button>
+      <!--
+      <button id="recordButton">🤙 Record</button>
+      <button style="display: none;" id="pauseButton" disabled>Pause</button>
+      <button id="stopButton" disabled>✋ Stop</button>
+      -->
+    </div>
+    <br />
+    <div id="visualization"></div>
+
+    <div id="formats"></div>
+    <ol id="recordingsList"></ol>
+    <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+  </body>
+</html>

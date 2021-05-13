@@ -1,10 +1,12 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://meething-dam.glitch.me/gun']
-const gun = Gun({peers:peers, localstorage:false});
+const peers = ['https://gundb-multiserver.glitch.me/test']
+const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";
 var root = gun.get(roomname);
+window.gun = gun;
+gun.get(roomname).once((data, key)=>{console.log("Initial Connection", key, data)})
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, roomname);
@@ -208,6 +210,7 @@ function sendGun(blob, time, selfId) {
 
 // is this right?
 root.get('audio').on(audio => shotGun(audio))
+
 async function shotGun(data){
   console.log('audio in!',data)
   var dataArray = await gun.get(roomname).get('audio').map().promOnce();

@@ -10,13 +10,13 @@ const room = joinRoom(config, roomname);
 const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
 
 getGunMsg((data, id) => {
-  console.log("in---->", data, id);
+  //console.log("in---->", data, id);
   gun._.on("in", data.msg);
-  root.once(console.log);
+  //root.once(console.log);
 });
 
 gun._.on("out", function(msg) {
-  console.log("out ---->", msg);
+  //console.log("out ---->", msg);
   sendGunMsg({ msg: msg });
 });
 
@@ -144,11 +144,11 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
-  rec.exportWAV(blob => createDownloadLink(blob));
+  rec.exportWAV(blob => createDownloadLink(blob, time));
   rec.exportWAV(blob => sendGun(blob, time, selfId));
 }
 
-function createDownloadLink(blob, remote) {
+function createDownloadLink(blob, time, remote) {
   console.log("got data!", blob);
   var url = URL.createObjectURL(blob);
   var au = document.createElement("audio");
@@ -187,7 +187,7 @@ function sendGun(blob, time, selfId) {
   reader.readAsDataURL(blob);
   reader.onloadend = function() {
     var base64data = reader.result;
-    console.log('base64data.length);
+    console.log('buffer',base64data.length);
     var timestart = JSON.stringify(time.start);
     /*
     root
@@ -203,22 +203,12 @@ function sendGun(blob, time, selfId) {
   };
 }
 
-root.get('audio').on(audio => console.log('audio in!',audio))
-
-/*
-
-
-*/
-// ROOM EVENTS
-/*
-const [sendAudio, getAudio] = room.makeAction("audio");
-
-getAudio((data, id, meta) => processAudio(data, id, meta));
-
-async function processAudio(data, id, meta) {
-  var blob = new Blob([data], { type: "audio/wav" });
-  //var blob = data;
-  console.log(blob, id, meta);
-  createDownloadLink(blob, true);
+root.get('audio').on(audio => shotGun(audio))
+function shotGun(data){
+  console.log('audio in!',data);
+  if (!data.time||!data.data||!data.id) return;
+  createDownloadLink(data.data,data.time,data.id)
 }
-*/
+
+
+

@@ -145,8 +145,8 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
-  rec.exportWAV(createDownloadLink);
-  rec.exportWAV(sendGun)
+  rec.exportWAV(blob => createDownloadLink(blob));
+  rec.exportWAV(blob => sendGun(blob,time,selfId))
 }
 
 function createDownloadLink(blob, remote) {
@@ -183,14 +183,14 @@ function createDownloadLink(blob, remote) {
   time = {};
 }
 
-function sendGun (blob) {
+function sendGun (blob,time,selfId) {
   var reader = new FileReader();
   reader.readAsDataURL(blob); 
   reader.onloadend = function() {
     var base64data = reader.result;                
     console.log(base64data.length);
     var timestart = JSON.stringify(time.start)
-    root.get('123').get('meta').put({name:"test",start:time.start})
+    root.get('123').get('meta').put({name:selfId,time:time})
     root.get('123').get('file').put({data:base64data})
   }
 }

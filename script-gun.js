@@ -211,16 +211,19 @@ function sendGun(blob, time, selfId) {
 root.get('audio').on(audio => shotGun(audio))
 async function shotGun(data){
   console.log('audio in!',data)
-  var peers = await room.getPeers()
-  console.log('connected to', peers)
-  var keys = await gun.get(roomname).promOnce()
-  console.log('gun graph',(await keys.ref.get('audio').get('v3TWckIQHL2OZMhCHY1y').promOnce()).data);
+  var dataArray = await gun.get(roomname).get('audio').map().promOnce();
+  for(let data of dataArray) {
+    console.log(data.key, data.data, "DATAAAAA")
+    /*  */
+  }
+}
+
+function processData(dataObj) {
   if (!data.time||!data.data||!data.id) return;
-  if (data.id === selfId) return;
-  fetch(data.data)
-    .then(res => res.blob())
-    .then(blob => createDownloadLink(blob,data.time,data.id))
-  
+    if (data.id === selfId) return;
+    fetch(data.data)
+      .then(res => res.blob())
+      .then(blob => createDownloadLink(blob,data.time,data.id))
 }
 
 

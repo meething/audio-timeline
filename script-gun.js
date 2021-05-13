@@ -186,7 +186,9 @@ function createDownloadLink(blob, remote) {
   reader.onloadend = function() {
     var base64data = reader.result;                
     console.log(base64data.length);
-    root.get(time.start).put(base64data);
+    var timestart = JSON.stringify(time.start)
+    root.get('123').get('meta').put({name:"test",start:time.start})
+    root.get('123').get('file').put({data:base64data})
   }
 }
 

@@ -1,4 +1,3 @@
-
 * {
   box-sizing: border-box;
 }
@@ -18,8 +17,6 @@
   src: url("https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Bold.otf?v=1603136323437")
     format("opentype");
 }
-
-
 
 body {
   font-family: HK Grotesk;
@@ -41,7 +38,6 @@ audio {
 audio::-webkit-media-controls-panel {
   width: 90px;
 }
-
 
 audio::-webkit-media-controls-mute-button {
   display: none;
@@ -84,61 +80,63 @@ audio::-webkit-media-controls-fullscreen-button {
 }
 
 audio::-webkit-media-controls-rewind-button
-
-audio::-webkit-media-controls-return-to-realtime-button {
+  audio::-webkit-media-controls-return-to-realtime-button {
   display: none;
 }
 
-
 /* timeline */
 
- .vis-timeline {
-      border: 1px solid #e2e2e2;
-      font-size: 8pt;
-      background: transparent;
-      height: 50%;
-    }
+.vis-timeline {
+  border: 1px solid #e2e2e2;
+  font-size: 8pt;
+  background: transparent;
+  height: 50%;
+}
 
-    .vis-item {
-      border-color: #afbfcf;
-      background-color: #afdfc3;
-      font-size: 15pt;
-      color: black;
-      box-shadow: 5px 5px 20px rgba(128,128,128, 0.5);
-    }
+.vis-item {
+  border-color: #afbfcf;
+  background-color: #afdfc3;
+  font-size: 15pt;
+  color: black;
+  box-shadow: 5px 5px 20px rgba(128, 128, 128, 0.5);
+}
 
-    .vis-item,
-    .vis-item.vis-line {
-      border-width: 1px;
-      color: #ffffff;
-    }
+.vis-item,
+.vis-item.vis-line {
+  border-width: 1px;
+  color: #ffffff;
+}
 
-    .vis-item.vis-dot {
-      border-width: 10px;
-      border-radius: 10px;
-    }
+.vis-item.vis-dot {
+  border-width: 10px;
+  border-radius: 10px;
+}
 
-    .vis-item.vis-selected {
-      border-color: green;
-      background-color: lightgreen;
-    }
+.vis-item.vis-selected {
+  border-color: green;
+  background-color: lightgreen;
+}
 
-    .vis-time-axis .vis-text {
-      color: #c2c2c2;
-      padding-top: 10px;
-      padding-left: 10px;
-    }
+.vis-time-axis .vis-text {
+  color: #c2c2c2;
+  padding-top: 10px;
+  padding-left: 10px;
+}
 
-    .vis-time-axis .vis-text.vis-major {
-      font-weight: bold;
-    }
+.vis-time-axis .vis-text.vis-major {
+  font-weight: bold;
+}
 
-    .vis-time-axis .vis-grid.vis-minor {
-      border-width: 1px;
-      border-color: #e2e2e2;
-    }
+.vis-time-axis .vis-grid.vis-minor {
+  border-width: 1px;
+  border-color: #e2e2e2;
+}
 
-    .vis-time-axis .vis-grid.vis-major {
-      border-width: 2px;
-      border-color: #F991A3;
-    }
+.vis-time-axis .vis-grid.vis-major {
+  border-width: 2px;
+  border-color: #F991A3;
+}
+
+.vis-item.vis-range {
+  min-width: 40px;
+}

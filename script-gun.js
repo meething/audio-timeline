@@ -212,15 +212,27 @@ root.get('audio').on(audio => shotGun(audio))
 async function shotGun(data){
   console.log('audio in!',data)
   var dataArray = await gun.get(roomname).get('audio').map().promOnce();
+  var dataObject = {}
   for(let data of dataArray) {
-    console.log(data.key, data.data, "DATAAAAA")
+    //console.log(data.key, data.data, "DATAAAAA")
+    if(data.key == "id") {
+      // new data object
+      dataObject = {};
+      dataObject.id = data.data
+    } else if (data.key == "time") {
+      dataObject.time = data.data
+    } else if (data.key == "data") {
+      dataObject.data = data.data
+      // complete
+      processData(dataObject)
+    }
     /*  */
   }
 }
 
-function processData(dataObj) {
+function processData(data) {
   if (!data.time||!data.data||!data.id) return;
-    if (data.id === selfId) return;
+    if (data.id === selfId || data.time.stop < Date.now()) return;
     fetch(data.data)
       .then(res => res.blob())
       .then(blob => createDownloadLink(blob,data.time,data.id))

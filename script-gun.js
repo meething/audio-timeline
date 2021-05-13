@@ -4,7 +4,7 @@ const gun = Gun();
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, "lobby");
-console.log(room)
+const [sendGunMsg, getGunMsg] = room.makeAction('GunMsg')
 // DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 

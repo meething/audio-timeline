@@ -24,7 +24,7 @@ timeline.moveTo(Date.now(), {
 
 var lastPlay;
 timeline.on("select", function(properties) {
-  console.log('click',properties)
+  console.log("click", properties);
   var player = document.getElementById("wave" + properties.items);
   var text = document.getElementById("text" + properties.items);
   if (player && player.play) {
@@ -33,9 +33,9 @@ timeline.on("select", function(properties) {
     }
     player.play();
     lastPlay = player;
-  } else if (text && spoken){
-    console.log('speaking',text)
-    spoken.say(text.textContent)
+  } else if (text && spoken) {
+    console.log("speaking", text);
+    spoken.say(text.textContent);
   }
   return false;
 });
@@ -142,26 +142,7 @@ async function createDownloadLink(blob, time, remote) {
   var player = au;
 
   // render locally
-  var tsid = Date.now();
-  player.id = "wave" + tsid;
-  var pdiv = document.createElement("div");
-  pdiv.innerHTML = "👋 &#10148;";
-  pdiv.appendChild(player);
-  var items = [
-    {
-      id: tsid,
-      content: pdiv,
-      group: 1,
-      start: time.start || Date.now(),
-      end: time.stop || undefined
-    }
-  ];
-  timeline.moveTo(time.start || Date.now(), {
-    animation: false
-  });
-  data.add(items);
-  timeline.setGroups(groups);
-  timeline.fit();
+  insertElement(player,time,remote)
   time = {};
 }
 
@@ -213,30 +194,33 @@ function speakUp() {
     speakButton.innerHTML = "👂 ...";
     spoken
       .listen()
-      .then(function(transcript) {
-        var tsid = Date.now();
-        var pdiv = document.createElement("div");
-        pdiv.id = "text"+tsid;
-        pdiv.innerHTML = transcript;
-        var items = [
-          {
-            id: tsid,
-            content: pdiv,
-            group: 1,
-            start: Date.now()
-          }
-        ];
-        timeline.moveTo(Date.now(), {
-          animation: false
-        });
-        data.add(items);
-        timeline.setGroups(groups);
-        timeline.fit();
-      })
+      .then(transcript => insertElement)
       .then(function(transcript) {
         speakButton.innerHTML = "👄 Text";
         speakButton.disabled = false;
       })
       .catch(e => console.warn(e.message));
   });
+}
+
+function insertElement(content, time, id) {
+  var tsid = Date.now();
+  var pdiv = document.createElement("div");
+  pdiv.id = "text" + tsid;
+  pdiv.innerHTML = content;
+  var items = [
+    {
+      id: tsid,
+      content: pdiv,
+      group: 1,
+      start: time.start || Date.now(),
+      end: time.stop || undefined
+    }
+  ];
+  timeline.moveTo(time.start || Date.now(), {
+    animation: false
+  });
+  data.add(items);
+  timeline.setGroups(groups);
+  timeline.fit();
 }

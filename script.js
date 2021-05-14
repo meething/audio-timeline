@@ -24,12 +24,18 @@ timeline.moveTo(Date.now(), {
 
 var lastPlay;
 timeline.on("select", function(properties) {
+  console.log('click',properties)
   var player = document.getElementById("wave" + properties.items);
-  if (lastPlay) {
-    lastPlay.pause();
+  var text = document.getElementById("text" + properties.items);
+  if (player && player.play) {
+    if (lastPlay) {
+      lastPlay.pause();
+    }
+    player.play();
+    lastPlay = player;
+  } else if (text){
+    
   }
-  if (player.play) player.play();
-  lastPlay = player;
   return false;
 });
 
@@ -46,6 +52,7 @@ talkButton.addEventListener("click", swapRec);
 
 var speakButton = document.getElementById("speakButton");
 speakButton.addEventListener("click", speakUp);
+if (!spoken) speakButton.disabled = true;
 
 var time = {};
 var active = false;
@@ -199,18 +206,24 @@ function everyone(cb) {
 }
 
 function speakUp() {
-  console.log('start spoken!')
+  console.log("start spoken!");
   spoken.say("Speak Up!").then(e => {
+    speakButton.disabled = true;
+    speakButton.innerHTML = "👂 ...";
     spoken
       .listen()
       .then(function(transcript) {
         var tsid = Date.now();
+        var pdiv = document.createElement("div");
+        pdiv.id = "text"+tsid;
+        pdiv.innerHTML = transcript;
         var items = [
           {
             id: tsid,
-            content: transcript,
+            content: pdiv,
             group: 1,
-            start: Date.now()          }
+            start: Date.now()
+          }
         ];
         timeline.moveTo(Date.now(), {
           animation: false
@@ -218,6 +231,8 @@ function speakUp() {
         data.add(items);
         timeline.setGroups(groups);
         timeline.fit();
+        speakButton.innerHTML = "👄 Text";
+        speakButton.disabled = false;
       })
       .catch(e => console.warn(e.message));
   });

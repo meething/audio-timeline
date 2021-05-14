@@ -1,6 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://gundb-multiserver.glitch.me/ctzn']
+const peers = ['https://gundb-multiserver.glitch.me/1235']
 const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";
@@ -10,6 +10,8 @@ gun.get(roomname).once((data, key)=>{console.log("Initial Connection", key, data
 
 const config = { appId: "audiotimeline" };
 const room = joinRoom(config, roomname);
+
+var counter = 0;
 
 console.log("IIII AAAMMM", selfId);
 //const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
@@ -149,17 +151,17 @@ function stopRecording() {
   gumStream.getAudioTracks()[0].stop();
   document.getElementById("formats").innerHTML = "";
   //create the wav blob and pass it on to createDownloadLink
-  rec.exportWAV(blob => createDownloadLink(blob, time, selfId));
-  rec.exportWAV(blob => sendGun(blob, time, selfId));
+  rec.exportWAV(blob => createDownloadLink(blob, time, selfId, counter));
+  rec.exportWAV(blob => sendGun(blob, time, selfId, counter));
+  counter++
 }
 
-function createDownloadLink(blob, time, remote, soul) {
-  console.log("got data!", blob, time, remote, soul);
-  if(!soul) { soul = "123232"}
+function createDownloadLink(blob, time, remote, count) {
+  console.log("got data!", blob, time, remote, count);
   var auto = true;
   if (remote == selfId) auto = false;
-  console.log('evaluating whether an id exists', !document.getElementById('wave'+soul), soul, remote)
-  if(!document.getElementById('wave'+soul)){
+  console.log('evaluating whether an id exists', !document.getElementById('wave'+remote+count), remote, count)
+  if(!document.getElementById('wave'+remote+count)){
     var url = URL.createObjectURL(blob);
     var au = document.createElement("audio");
     //add controls to the <audio> element
@@ -169,7 +171,7 @@ function createDownloadLink(blob, time, remote, soul) {
     var player = au;
 
     // render locally
-    var tsid = soul;
+    var tsid = remote + count;
     player.id = "wave" + tsid;
     var pdiv = document.createElement("div");
     pdiv.innerHTML = "👋 &#10148;";
@@ -196,7 +198,7 @@ function createDownloadLink(blob, time, remote, soul) {
   }
 }
 
-function sendGun(blob, time, selfId) {
+function sendGun(blob, time, selfId, counter) {
   var reader = new FileReader();
   reader.readAsDataURL(blob);
   reader.onloadend = function() {
@@ -212,7 +214,7 @@ function sendGun(blob, time, selfId) {
       .get("file")
       .put({ data: base64data });
     */
-    gun.get(roomname).get('audio').get(selfId).put({id: selfId, time: time, data:base64data})
+    gun.get(roomname).get('audio').get(selfId).put({id: selfId, count: counter, time: time, data:base64data})
   };
 }
 
@@ -243,7 +245,7 @@ function processData(data, soul) {
     if (data.id === selfId) return;
     fetch(data.data)
       .then(res => res.blob())
-      .then(blob => createDownloadLink(blob,data.time,data.id, soul))
+      .then(blob => createDownloadLink(blob,data.time,data.id, data.count))
 }
 
 

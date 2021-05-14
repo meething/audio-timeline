@@ -128,7 +128,7 @@ function stopRecording() {
   rec.getBuffer(console.log);
   rec.exportWAV(blob => createDownloadLink(blob, time));
   //rec.exportWAV(blob => sendAudio(blob));
-  rec.exportWAV(blob => sendPeers(blob, time, selfId));
+  rec.exportWAV(blob => sendPeers(blob, time, selfId, "audio"));
 }
 
 async function createDownloadLink(blob, time, remote) {
@@ -179,13 +179,13 @@ async function processAudio(data, id, meta) {
   createDownloadLink(blob, true);
 }
 
-function sendPeers(data, time, id) {
+function sendPeers(data, time, id, type) {
   var send = function(p) {
     //console.log('sending to peer',p)
     var conn = peer.connect(p);
     conn.on("open", function() {
       return new Promise(function(resolve, reject) {
-        conn.send({ data, time, id });
+        conn.send({ data, time, id, type });
       }).then(console.log("sent")); //conn.close();
     });
   };
@@ -199,7 +199,8 @@ function handlePeerConnect(conn) {
 
 function handlePeerMessage(msg) {
   console.log("peer msg", msg);
-  createDownloadLink(new Blob([msg.data]), msg.time, msg.id);
+  if (msg.type == "audio") createDownloadLink(new Blob([msg.data]), msg.time, msg.id)
+  else insertElement(msg.data,msg.time, msg.id, msg.type)
 }
 
 function everyone(cb) {
@@ -214,11 +215,13 @@ function speakUp() {
     speakButton.innerHTML = "👂 ...";
     spoken
       .listen()
-      .then(transcript => insertElement)
+      .then(transcript => insertElement(transcript))
       .then(function(transcript) {
         speakButton.innerHTML = "👄 Text";
         speakButton.disabled = false;
+        return transcript;
       })
+      .then(transcript => sendPeers(transcript, time, selfId, "text"))
       .catch(e => console.warn(e.message));
   });
 }
@@ -233,11 +236,11 @@ function insertElement(content, time, id, type) {
       id: tsid,
       content: pdiv,
       group: 1,
-      start: time.start || Date.now(),
-      end: time.stop || undefined
+      start: time ? time.start : tsid,
+      end: time ? time.stop : undefined
     }
   ];
-  timeline.moveTo(time.start || Date.now(), {
+  timeline.moveTo(time ? time.start : tsid, {
     animation: false
   });
   data.add(items);

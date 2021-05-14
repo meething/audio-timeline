@@ -154,43 +154,44 @@ function stopRecording() {
 }
 
 function createDownloadLink(blob, time, remote) {
-  console.log("got data!", data, time, remote);
+  console.log("got data!", blob, time, remote);
   if (remote == selfId) remote = false;
-  var url = URL.createObjectURL(blob);
-  var au = document.createElement("audio");
-  //add controls to the <audio> element
-  au.controls = false;
-  if (remote) au.autoplay = true;
-  au.src = url;
-  var player = au;
+  console.log('evaluating whether an id exists', !document.getElementById('wave'+remote), remote)
+  if(!document.getElementById('wave'+remote)){
+    var url = URL.createObjectURL(blob);
+    var au = document.createElement("audio");
+    //add controls to the <audio> element
+    au.controls = false;
+    if (remote) au.autoplay = true;
+    au.src = url;
+    var player = au;
 
-  // render locally
-  var tsid = remote;
-  player.id = "wave" + tsid;
-  if(!document.getElementById(player.id)){
+    // render locally
+    var tsid = remote;
+    player.id = "wave" + tsid;
     var pdiv = document.createElement("div");
     pdiv.innerHTML = "👋 &#10148;";
     pdiv.appendChild(player);
+    var pdiv = document.createElement("div");
+    pdiv.innerHTML = "👋 &#10148;";
+    pdiv.appendChild(player);
+    var items = [
+      {
+        id: tsid,
+        content: pdiv,
+        group: 1,
+        start: time.start || Date.now(),
+        end: time.stop || undefined
+      }
+    ];
+    timeline.moveTo(time.start || Date.now(), {
+      animation: false
+    });
+    data.add(items);
+    timeline.setGroups(groups);
+    timeline.fit();
+    time = {};
   }
-  var pdiv = document.createElement("div");
-  pdiv.innerHTML = "👋 &#10148;";
-  pdiv.appendChild(player);
-  var items = [
-    {
-      id: tsid,
-      content: pdiv,
-      group: 1,
-      start: time.start || Date.now(),
-      end: time.stop || undefined
-    }
-  ];
-  timeline.moveTo(time.start || Date.now(), {
-    animation: false
-  });
-  data.add(items);
-  timeline.setGroups(groups);
-  timeline.fit();
-  time = {};
 }
 
 function sendGun(blob, time, selfId) {

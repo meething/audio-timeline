@@ -142,7 +142,27 @@ async function createDownloadLink(blob, time, remote) {
   var player = au;
 
   // render locally
-  insertElement(player,time,remote)
+  // insertElement(player,time,remote)
+  var tsid = Date.now();
+  player.id = "wave" + tsid;
+  var pdiv = document.createElement("div");
+  pdiv.innerHTML = "👋 &#10148;";
+  pdiv.appendChild(player);
+  var items = [
+    {
+      id: tsid,
+      content: pdiv,
+      group: 1,
+      start: time.start || Date.now(),
+      end: time.stop || undefined
+    }
+  ];
+  timeline.moveTo(time.start || Date.now(), {
+    animation: false
+  });
+  data.add(items);
+  timeline.setGroups(groups);
+  timeline.fit();
   time = {};
 }
 
@@ -203,7 +223,7 @@ function speakUp() {
   });
 }
 
-function insertElement(content, time, id) {
+function insertElement(content, time, id, type) {
   var tsid = Date.now();
   var pdiv = document.createElement("div");
   pdiv.id = "text" + tsid;

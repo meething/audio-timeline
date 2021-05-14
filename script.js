@@ -44,6 +44,9 @@ var audioContext; //audio context to help us record
 var talkButton = document.getElementById("talkButton");
 talkButton.addEventListener("click", swapRec);
 
+var speakButton = document.getElementById("speakButton");
+speakButton.addEventListener("click", speakUp);
+
 var time = {};
 var active = false;
 function swapRec() {
@@ -172,9 +175,9 @@ function sendPeers(data, time, id) {
     //console.log('sending to peer',p)
     var conn = peer.connect(p);
     conn.on("open", function() {
-       return new Promise(function(resolve, reject) {
-         conn.send({ data, time, id })
-       }).then(console.log('sent')) //conn.close();
+      return new Promise(function(resolve, reject) {
+        conn.send({ data, time, id });
+      }).then(console.log("sent")); //conn.close();
     });
   };
   everyone(send);
@@ -193,4 +196,29 @@ function handlePeerMessage(msg) {
 function everyone(cb) {
   var peers = room.getPeers();
   peers.forEach(peer => cb(peer));
+}
+
+function speakUp() {
+  console.log('start spoken!')
+  spoken.say("Speak Up!").then(e => {
+    spoken
+      .listen()
+      .then(function(transcript) {
+        var tsid = Date.now();
+        var items = [
+          {
+            id: tsid,
+            content: transcript,
+            group: 1,
+            start: Date.now()          }
+        ];
+        timeline.moveTo(Date.now(), {
+          animation: false
+        });
+        data.add(items);
+        timeline.setGroups(groups);
+        timeline.fit();
+      })
+      .catch(e => console.warn(e.message));
+  });
 }

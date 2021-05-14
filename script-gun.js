@@ -14,40 +14,16 @@ const room = joinRoom(config, roomname);
 var counter = 0;
 
 console.log("IIII AAAMMM", selfId);
-//const [sendGunMsg, getGunMsg] = room.makeAction("GunMsg");
-/*
-getGunMsg((data, id) => {
-  console.log("in---->", data, id);
-  gun._.on("in", data.msg);
-  //root.once(console.log);
-});
 
-gun._.on("out", function(msg) {
-  console.log("out ---->", msg);
-  sendGunMsg({ msg: msg });
-});
-*/
-// DOM element where the Timeline will be attached
 var container = document.getElementById("visualization");
 
 // create a Group list
 var groups = new vis.DataSet();
 groups.add({ id: 1, content: "AUDIO" });
+
 // create a DataSet
 var data = new vis.DataSet();
-// add items
-/*
-data.add([
-  {
-    id: 5,
-    group: 1,
-    content: "Start!",
-    start: Date.now()
-  }
-]);
-*/
 
-// Configuration for the Timeline
 var options = {};
 
 // Create a Timeline

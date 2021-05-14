@@ -213,23 +213,13 @@ root.get('audio').on(audio => shotGun(audio))
 
 async function shotGun(data){
   console.log('audio in!',data)
-  var dataArray = await gun.get(roomname).get('audio').map().promOnce();
-  var dataObject = {}
+  var dataArray = await gun.get(roomname).map().promOnce();
   for(let data of dataArray) {
-    //console.log(data.key, data.data, "DATAAAAA")
-    if(data.key == "id") {
-      // new data object
-      dataObject = {};
-      dataObject.id = data.data
-    } else if (data.key == "time") {
-      dataObject.time = data.data
-    } else if (data.key == "data") {
-      dataObject.data = data.data
-      // complete
-      processData(dataObject)
+    console.log(data.key, data.data, "DATAAAAA")
+    var audioObject = await gun.get(data.key).promOnce()
+    console.log("direct fetch",audioObject);
+    processData(audioObject.data)
     }
-    /*  */
-  }
 }
 
 function processData(data) {

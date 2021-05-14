@@ -232,6 +232,8 @@ function speakUp() {
         data.add(items);
         timeline.setGroups(groups);
         timeline.fit();
+      })
+      .then(function(transcript) {
         speakButton.innerHTML = "👄 Text";
         speakButton.disabled = false;
       })

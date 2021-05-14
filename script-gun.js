@@ -1,6 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://gundb-multiserver.glitch.me/lobby']
+const peers = ['https://gundb-multiserver.glitch.me/ctzn']
 const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";
@@ -153,21 +153,23 @@ function stopRecording() {
   rec.exportWAV(blob => sendGun(blob, time, selfId));
 }
 
-function createDownloadLink(blob, time, remote) {
-  console.log("got data!", blob, time, remote);
-  if (remote == selfId) remote = false;
-  console.log('evaluating whether an id exists', !document.getElementById('wave'+remote), remote)
-  if(!document.getElementById('wave'+remote)){
+function createDownloadLink(blob, time, remote, soul) {
+  console.log("got data!", blob, time, remote, soul);
+  if(!soul) { soul = "123232"}
+  var auto = true;
+  if (remote == selfId) auto = false;
+  console.log('evaluating whether an id exists', !document.getElementById('wave'+soul), soul, remote)
+  if(!document.getElementById('wave'+soul)){
     var url = URL.createObjectURL(blob);
     var au = document.createElement("audio");
     //add controls to the <audio> element
     au.controls = false;
-    if (remote) au.autoplay = true;
+    if (auto) au.autoplay = true;
     au.src = url;
     var player = au;
 
     // render locally
-    var tsid = remote;
+    var tsid = soul;
     player.id = "wave" + tsid;
     var pdiv = document.createElement("div");
     pdiv.innerHTML = "👋 &#10148;";
@@ -229,19 +231,19 @@ async function shotGun(data){
         audioObject.data.time = timeObject.data;
         console.log("direct fetch", audioObject.data, timeObject.data);
       }
-      processData(audioObject.data)
+      processData(audioObject.data, data.data._['#'])
     }
   }
 }
 
-function processData(data) {
+function processData(data, soul) {
   //console.log('processing data', data)
   if (!data.time||!data.data||!data.id) return;
     // ignore our own, but his might not be peer id at this point, will check
     if (data.id === selfId) return;
     fetch(data.data)
       .then(res => res.blob())
-      .then(blob => createDownloadLink(blob,data.time,data.id))
+      .then(blob => createDownloadLink(blob,data.time,data.id, soul))
 }
 
 

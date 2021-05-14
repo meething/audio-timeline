@@ -1,5 +1,7 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
+var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
 var peer = new Peer(selfId);
 peer.on("open", function(id) {
   console.log("My peer ID is: " + id, selfId);
@@ -51,9 +53,11 @@ var audioContext; //audio context to help us record
 var talkButton = document.getElementById("talkButton");
 talkButton.addEventListener("click", swapRec);
 
+
 var speakButton = document.getElementById("speakButton");
 speakButton.addEventListener("click", speakUp);
 if (!spoken) speakButton.disabled = true;
+if (!isChrome) speakButton.style.visibility = "hidden";
 
 var time = {};
 var active = false;

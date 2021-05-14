@@ -1,6 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://gundb-multiserver.glitch.me/gunlobby']
+const peers = ['https://gundb-multiserver.glitch.me/lobby']
 const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";
@@ -218,22 +218,24 @@ async function shotGun(data){
     console.log(data.key, data.data, "DATAAAAA");
     if(data.key != "_"){
       let audioObject = await gun.get(data.data._['#']).promOnce();
-      let timeObject = await gun.get(audioObject.data.time['#']).promOnce()
-      audioObject.data.time = timeObject.data;
-      console.log("direct fetch", audioObject.data, timeObject.data);
+      if(!audioObject.data.time.start) {
+        let timeObject = await gun.get(audioObject.data.time['#']).promOnce()  
+        audioObject.data.time = timeObject.data;
+        console.log("direct fetch", audioObject.data, timeObject.data);
+      }
       processData(audioObject.data)
     }
   }
 }
 
 function processData(data) {
-  console.log('processing data', data)
+  //console.log('processing data', data)
   if (!data.time||!data.data||!data.id) return;
     // ignore our own, but his might not be peer id at this point, will check
     if (data.id === selfId) return;
     fetch(data.data)
       .then(res => res.blob())
-      .then(blob => createDownloadLink(blob,data.time,data.id))
+      .then(blob => createDownloadLink(blob,data.time,data.id, true))
 }
 
 

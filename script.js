@@ -205,12 +205,13 @@ function handlePeerMessage(msg) {
 
 function everyone(cb) {
   var peers = room.getPeers();
+  console.log(peers);
   peers.forEach(peer => cb(peer));
 }
 
 function speakUp() {
   console.log("start spoken!");
-  spoken.say("Speak Up!").then(e => {
+  spoken.say("ready?").then(e => {
     speakButton.disabled = true;
     speakButton.innerHTML = "👂 ...";
     spoken
@@ -221,7 +222,7 @@ function speakUp() {
         speakButton.disabled = false;
         return transcript;
       })
-      .then(transcript => sendPeers(transcript, time, selfId, "text"))
+      .then(transcript => sendPeers(transcript, false, selfId, "text"))
       .catch(e => console.warn(e.message));
   });
 }
@@ -246,4 +247,5 @@ function insertElement(content, time, id, type) {
   data.add(items);
   timeline.setGroups(groups);
   timeline.fit();
+  return content;
 }

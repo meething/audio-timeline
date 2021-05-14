@@ -165,8 +165,13 @@ function createDownloadLink(blob, time, remote) {
   var player = au;
 
   // render locally
-  var tsid = Date.now();
+  var tsid = remote;
   player.id = "wave" + tsid;
+  if(!document.getElementById(player.id)){
+    var pdiv = document.createElement("div");
+    pdiv.innerHTML = "👋 &#10148;";
+    pdiv.appendChild(player);
+  }
   var pdiv = document.createElement("div");
   pdiv.innerHTML = "👋 &#10148;";
   pdiv.appendChild(player);
@@ -235,7 +240,7 @@ function processData(data) {
     if (data.id === selfId) return;
     fetch(data.data)
       .then(res => res.blob())
-      .then(blob => createDownloadLink(blob,data.time,data.id, true))
+      .then(blob => createDownloadLink(blob,data.time,data.id))
 }
 
 

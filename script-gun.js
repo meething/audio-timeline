@@ -1,6 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://gundb-multiserver.glitch.me/test']
+const peers = ['https://e2eec.herokuapp.com/gun']
 const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";

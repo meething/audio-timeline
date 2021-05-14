@@ -216,8 +216,11 @@ async function shotGun(data){
   var dataArray = await gun.get(roomname).map().promOnce();
   for(let data of dataArray) {
     console.log(data.key, data.data, "DATAAAAA");
-    var audioObject = await gun.get(data.data['_']['#']).promOnce();
-    console.log("direct fetch", audioObject);
+    debugger
+    var audioObject = await gun.get(data.data._['#']).promOnce();
+    var timeObject = await gun.get(audioObject.data.time['#']).promOnce()
+    audioObject.data.time = timeObject.data;
+    console.log("direct fetch", audioObject.data, timeObject.data);
     processData(audioObject.data)
     }
 }

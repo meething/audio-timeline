@@ -1,6 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://gundb-multiserver.glitch.me/gunaudio']
+const peers = ['https://gundb-multiserver.glitch.me/gunlobby']
 const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";
@@ -216,9 +216,9 @@ async function shotGun(data){
   var dataArray = await gun.get(roomname).map().promOnce();
   for(let data of dataArray) {
     console.log(data.key, data.data, "DATAAAAA");
-    var audioObject = await data.ref.promOnce();
+    var audioObject = await gun.get(data.data['_']['#']).promOnce();
     console.log("direct fetch", audioObject);
-    processData(audioObject[0].data)
+    processData(audioObject.data)
     }
 }
 

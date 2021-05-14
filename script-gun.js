@@ -209,26 +209,29 @@ function sendGun(blob, time, selfId) {
 }
 
 // is this right?
-root.get('audio').on(audio => shotGun(audio))
+root.get('audio').on(audio => shotGun(audio), {change:true})
 
 async function shotGun(data){
   console.log('audio in!',data)
   var dataArray = await gun.get(roomname).map().promOnce();
   for(let data of dataArray) {
     console.log(data.key, data.data, "DATAAAAA");
-    debugger
-    var audioObject = await gun.get(data.data._['#']).promOnce();
-    var timeObject = await gun.get(audioObject.data.time['#']).promOnce()
-    audioObject.data.time = timeObject.data;
-    console.log("direct fetch", audioObject.data, timeObject.data);
-    processData(audioObject.data)
+    if(data.key != "-"){
+      var audioObject = await gun.get(data.data._['#']).promOnce();
+      debugger
+      var timeObject = await gun.get(audioObject.data.time['#']).promOnce()
+      audioObject.data.time = timeObject.data;
+      console.log("direct fetch", audioObject.data, timeObject.data);
+      processData(audioObject.data)
     }
+  }
 }
 
 function processData(data) {
   console.log('processing data', data)
   if (!data.time||!data.data||!data.id) return;
-    if (data.id === selfId || data.time.stop < Date.now()) return;
+    // ignore our own, but his might not be peer id at this point, will check
+    if (data.id === selfId) return;
     fetch(data.data)
       .then(res => res.blob())
       .then(blob => createDownloadLink(blob,data.time,data.id))

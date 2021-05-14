@@ -1,6 +1,6 @@
 import { joinRoom, selfId } from "https://cdn.skypack.dev/trystero";
 
-const peers = ['https://e2eec.herokuapp.com/gun']
+const peers = ['https://gundb-multiserver.glitch.me/gunaudio']
 const gun = Gun({peers:peers, localStorage:false, radisk:false});
 
 const roomname = "gun";
@@ -215,14 +215,15 @@ async function shotGun(data){
   console.log('audio in!',data)
   var dataArray = await gun.get(roomname).map().promOnce();
   for(let data of dataArray) {
-    console.log(data.key, data.data, "DATAAAAA")
-    var audioObject = await gun.get(data.key).promOnce()
-    console.log("direct fetch",audioObject);
-    processData(audioObject.data)
+    console.log(data.key, data.data, "DATAAAAA");
+    var audioObject = await data.ref.promOnce();
+    console.log("direct fetch", audioObject);
+    processData(audioObject[0].data)
     }
 }
 
 function processData(data) {
+  console.log('processing data', data)
   if (!data.time||!data.data||!data.id) return;
     if (data.id === selfId || data.time.stop < Date.now()) return;
     fetch(data.data)

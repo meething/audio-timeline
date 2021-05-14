@@ -33,8 +33,9 @@ timeline.on("select", function(properties) {
     }
     player.play();
     lastPlay = player;
-  } else if (text){
-    
+  } else if (text && spoken){
+    console.log('speaking',text)
+    spoken.say(text.textContent)
   }
   return false;
 });

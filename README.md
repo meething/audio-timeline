@@ -2,7 +2,7 @@
 
 # Hello, Timeline
 
-Distributed audio timeline experiment, powered by [GUN](https://gun.eco/)
+Distributed p2p audio timeline experiment, pluggable with [GUN](https://gun.eco/), PeerJS or any other network.
 
 ![image](https://user-images.githubusercontent.com/1423657/134769470-a0378da7-e46a-4e03-9346-48e4ec59b514.png)
 
@@ -11,7 +11,7 @@ Distributed audio timeline experiment, powered by [GUN](https://gun.eco/)
 WebRTC is bandwidth expensive and hard to decentralize, particularly for large rooms.<br>
 
 Enter our _p2p-walkie-talkie_ rendered over a _timeline_ playing in realtime _(like a conference)_ and able to <br>
-_rewind/forward_ like a _podcast_ supporting audio or speech-to-text messages syncronized in realtime using [GUN](https://gun.eco/)
+_rewind/forward_ like a _podcast_ supporting audio or speech-to-text messages syncronized in realtime.
 
 ## Demo
 

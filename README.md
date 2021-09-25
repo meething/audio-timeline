@@ -1,8 +1,20 @@
+<img src="https://i.imgur.com/XS79fTC.png" width=200> <img width="100" alt="mozilla-builders" src="https://user-images.githubusercontent.com/1423657/81992335-85346480-9643-11ea-8754-8275e98e06bc.png">
+
 # Hello, Timeline
 
 Distributed audio timeline experiment, powered by [GUN](https://gun.eco/)
 
-Try out the [LIVE DEMO](https://audiotimeline.glitch.me/) with a friend...  or a hundred friends!
-
-
 ![image](https://user-images.githubusercontent.com/1423657/134769470-a0378da7-e46a-4e03-9346-48e4ec59b514.png)
+
+
+## About
+WebRTC is bandwidth expensive and hard to decentralize, particularly for large rooms.<br>
+
+Enter our _p2p-walkie-talkie_ rendered over a _timeline_ playing in realtime _(like a conference)_ and able to <br>
+_rewind/forward_ like a _podcast_ supporting audio or speech-to-text messages syncronized in realtime using [GUN](https://gun.eco/)
+
+## Demo
+
+Exciting? Confusing? _Try out the [LIVE DEMO](https://audiotimeline.glitch.me/) with a friend, or two ...  or a hundred!_
+
+

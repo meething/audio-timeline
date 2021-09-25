@@ -2,7 +2,7 @@
 
 # Hello, Timeline
 
-Distributed p2p audio timeline experiment, pluggable with [GUN](https://gun.eco/), PeerJS or any other network.
+Decentralized p2p audio timeline experiment, pluggable with [GUN](https://gun.eco/), PeerJS or any other p2p network.
 
 ![image](https://user-images.githubusercontent.com/1423657/134769470-a0378da7-e46a-4e03-9346-48e4ec59b514.png)
 

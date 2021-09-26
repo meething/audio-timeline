@@ -10,7 +10,7 @@ Decentralized p2p audio timeline experiment, pluggable with [GUN](https://gun.ec
 ## About
 WebRTC is bandwidth expensive and hard to decentralize, particularly for large rooms.<br>
 
-Enter our _p2p-walkie-talkie_ rendered over a _timeline_ playing in realtime _(like a conference)_ and able to <br>
+Enter our _p2p-walkie-talkie_ rendered over a _timeline_ playing linearly _(like a conference)_ and able to <br>
 _rewind/forward_ like a _podcast_ supporting audio or speech-to-text messages syncronized in realtime.
 
 ## Demo
